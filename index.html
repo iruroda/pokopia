@@ -84,6 +84,8 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .modal input{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;color:var(--txt);font-size:14px;padding:10px 12px;margin-bottom:9px;outline:none;font-family:inherit;}
 .modal input:focus{border-color:var(--accent);}
 .loginmsg{font-size:11.5px;color:#d1476b;min-height:14px;margin-bottom:4px;}
+.modeswitch{font-size:11.5px;color:var(--sub);margin-top:10px;}
+.modeswitch a{color:var(--accent);font-weight:700;text-decoration:none;cursor:pointer;}
 .modal button.primary{margin-top:4px;width:100%;background:var(--accent);border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;color:#ffffff;cursor:pointer;}
 .modal button.secondary{margin-top:8px;width:100%;background:none;border:none;color:var(--sub);font-size:12.5px;padding:6px;cursor:pointer;}
 </style>
@@ -123,6 +125,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
     <input id="loginPw" type="password" placeholder="비밀번호" autocomplete="current-password">
     <div id="loginMsg" class="loginmsg"></div>
     <button class="primary" id="loginSubmit" type="button">로그인</button>
+    <div id="modeSwitch" class="modeswitch">계정이 없으신가요? <a id="toSignup" href="#">계정 만들기</a></div>
     <button class="secondary" id="loginCancel" type="button">닫기</button>
   </div>
 </div>
@@ -299,7 +302,17 @@ function updateAuthUI(){
   if(CUR_USER){g.textContent=CUR_USER+'님, 안녕하세요.';g.classList.add('show');}
   else{g.textContent='';g.classList.remove('show');}
 }
-function openLogin(){document.getElementById('loginMsg').textContent='';document.getElementById('loginId').value='';document.getElementById('loginPw').value='';document.getElementById('loginModal').classList.add('open');}
+let loginMode='login'; // 'login' | 'signup' — 로그인과 계정생성을 명확히 분리
+function applyLoginMode(){
+  const isSignup=loginMode==='signup';
+  document.getElementById('loginTitle').textContent=isSignup?'계정 만들기':'로그인';
+  document.getElementById('loginSubmit').textContent=isSignup?'계정 만들기':'로그인';
+  document.getElementById('modeSwitch').innerHTML=isSignup
+    ?'이미 계정이 있으신가요? <a id="toSignup" href="#">로그인</a>'
+    :'계정이 없으신가요? <a id="toSignup" href="#">계정 만들기</a>';
+  document.getElementById('toSignup').onclick=(e)=>{e.preventDefault();loginMode=isSignup?'login':'signup';applyLoginMode();document.getElementById('loginMsg').textContent='';};
+}
+function openLogin(){loginMode='login';applyLoginMode();document.getElementById('loginMsg').textContent='';document.getElementById('loginId').value='';document.getElementById('loginPw').value='';document.getElementById('loginModal').classList.add('open');}
 function closeLogin(){document.getElementById('loginModal').classList.remove('open');}
 document.getElementById('loginCancel').onclick=closeLogin;
 document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin();});
@@ -323,30 +336,34 @@ document.getElementById('loginSubmit').onclick=()=>{
   const pw=document.getElementById('loginPw').value;
   const msg=document.getElementById('loginMsg');
   const btn=document.getElementById('loginSubmit');
+  const isSignup=loginMode==='signup';
   if(!id||!pw){msg.textContent='아이디와 비밀번호를 입력해주세요.';return;}
   if(!fbAuth){msg.textContent='서버 연결이 안 돼 로그인할 수 없습니다.';return;}
   if(pw.length<6){msg.textContent='비밀번호는 6자 이상이어야 합니다.';return;}
   const email=idToEmail(id);
   if(email.length>80){msg.textContent='아이디가 너무 깁니다.';return;}
-  msg.textContent='';btn.disabled=true;btn.textContent='로그인 중…';
-  fbAuth.createUserWithEmailAndPassword(email,pw)
-    .catch(function(err){
-      if(err&&err.code==='auth/email-already-in-use')return fbAuth.signInWithEmailAndPassword(email,pw);
-      throw err;
-    })
+  msg.textContent='';btn.disabled=true;btn.textContent=isSignup?'만드는 중…':'로그인 중…';
+  const authCall=isSignup
+    ?fbAuth.createUserWithEmailAndPassword(email,pw)
+    :fbAuth.signInWithEmailAndPassword(email,pw);
+  authCall
     .then(function(cred){return mergeGuestLikesInto(cred.user.uid);})
     .then(function(){
-      btn.disabled=false;btn.textContent='로그인';
+      btn.disabled=false;btn.textContent=isSignup?'계정 만들기':'로그인';
       closeLogin();closeMenu();
     })
     .catch(function(err){
-      btn.disabled=false;btn.textContent='로그인';
+      btn.disabled=false;btn.textContent=isSignup?'계정 만들기':'로그인';
       const code=err&&err.code;
-      if(code==='auth/wrong-password'||code==='auth/invalid-credential'||code==='auth/invalid-login-credentials'){msg.textContent='비밀번호가 일치하지 않아요.';}
+      if(!isSignup&&code==='auth/user-not-found'){msg.textContent='존재하지 않는 아이디입니다.';}
+      else if(!isSignup&&code==='auth/wrong-password'){msg.textContent='비밀번호가 일치하지 않아요.';}
+      else if(!isSignup&&(code==='auth/invalid-credential'||code==='auth/invalid-login-credentials')){msg.textContent='아이디 또는 비밀번호가 올바르지 않아요.';}
+      else if(isSignup&&code==='auth/email-already-in-use'){msg.textContent='이미 존재하는 아이디입니다.';}
+      else if(code==='auth/weak-password'){msg.textContent='비밀번호가 너무 약해요.';}
       else if(code==='auth/invalid-email'){msg.textContent='아이디 형식이 올바르지 않아요.';}
       else if(code==='auth/network-request-failed'){msg.textContent='네트워크 연결을 확인해주세요.';}
       else if(code==='auth/too-many-requests'){msg.textContent='시도가 너무 많아요. 잠시 후 다시 시도해주세요.';}
-      else{msg.textContent='로그인에 실패했어요. 다시 시도해주세요.';console.error(err);}
+      else{msg.textContent=(isSignup?'계정 생성에 실패했어요.':'로그인에 실패했어요.')+' 다시 시도해주세요.';console.error(err);}
     });
 };
 
