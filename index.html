@@ -8,41 +8,45 @@
 <link rel="apple-touch-icon" href="img/monsterball.png">
 
 <style>
-:root{--bg:#11131a;--card:#1c2030;--card2:#232838;--txt:#eef1f6;--sub:#9aa3b2;--accent:#c4b5fd;}
+:root{--bg:#f3e8fd;--card:#ffffff;--card2:#f6eefd;--txt:#2c1f42;--sub:#8f7aa8;--accent:#9333ea;--border:#e6d6f7;--heart:#ffb0c8;--heart-empty:#c9b8dd;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html{overflow-y:scroll;overflow-x:hidden;}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh;}
-header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#1a1d29,#141722);padding:13px 14px 9px;border-bottom:1px solid #2a2f40;box-shadow:0 4px 14px rgba(0,0,0,.35);}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#ffffff,#f6edfd);padding:13px 14px 9px;border-bottom:1px solid var(--border);box-shadow:0 4px 14px rgba(147,51,234,.10);}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 9px;}
 #hlogo,#htitle{cursor:pointer;}
 .title img{width:24px;height:24px;object-fit:contain;}
-.title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;}
-.searchwrap{display:flex;gap:6px;margin:0 0 9px;}
-.search{flex:1;min-width:0;padding:9px 12px;border-radius:11px;border:1px solid #2f3548;background:#10131c;color:var(--txt);font-size:13px;}
-.qclear{flex:0 0 auto;padding:0 14px;border-radius:11px;border:1px solid #2f3548;background:var(--card2);color:var(--txt);font-size:13px;font-weight:700;cursor:pointer;}
-.toggle{flex:3;margin:0;padding:7px;border:none;border-radius:10px;background:var(--card2);color:var(--sub);font-size:12.5px;font-weight:700;cursor:pointer;}
-.toolbar{display:flex;gap:6px;align-items:center;margin:8px 0 0;}
-.search::placeholder{color:#6b7385;}
-.cats{display:flex;gap:6px;}
-.cat{flex:1;padding:9px 3px;border:none;border-radius:11px;background:var(--card);color:var(--sub);font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s;}
-.cat.active{background:var(--accent);color:#222;}
+.title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;}
+#menubtn{flex:0 0 auto;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;}
+#menubtn span{display:block;width:20px;height:3px;border-radius:2px;background:var(--accent);}
+.searchwrap{position:relative;margin:0 0 9px;}
+.search{width:100%;padding:9px 100px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;}
+.qclear{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:4px 12px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--txt);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.search::placeholder{color:#ab9cc9;}
+.suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(43,33,64,.15);max-height:220px;overflow-y:auto;z-index:25;display:none;}
+.suggest.open{display:block;}
+.suggest .sitem{padding:9px 12px;font-size:13px;cursor:pointer;color:var(--txt);}
+.suggest .sitem:hover{background:var(--card2);}
 .chips{display:flex;flex-wrap:wrap;gap:7px;padding:11px 0 2px;}
 .chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--card2);color:var(--txt);font-size:12.5px;font-weight:600;border:1.5px solid transparent;cursor:pointer;white-space:nowrap;}
 .chip img{width:16px;height:16px;object-fit:contain;}
-.chip.active{border-color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.25) inset;}
-.count{flex:1;font-size:11px;color:var(--sub);padding:0 2px;}
+.chip.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(147,51,234,.18) inset;}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px 44px;}
-.card{position:relative;aspect-ratio:1/1;background:var(--card);border-radius:13px;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;overflow:hidden;border:1px solid #262b3b;}
-.card .no{position:absolute;top:4px;left:5px;font-size:8.5px;color:var(--sub);font-weight:700;z-index:2;}
+.card{position:relative;aspect-ratio:1/1;background:var(--card);border-radius:13px;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;overflow:hidden;border:1px solid var(--border);}
+.card .no{position:absolute;top:3px;left:5px;font-size:8.5px;color:var(--sub);font-weight:700;z-index:2;}
+.card .heart{position:absolute;top:14px;left:3px;width:17px;height:17px;z-index:3;cursor:pointer;}
+.card .heart svg{width:100%;height:100%;display:block;}
+.card .heart path{fill:none;stroke:var(--heart-empty);stroke-width:1.3;}
+.card .heart.liked path{fill:var(--heart);stroke:var(--heart);}
 .card .badges{position:absolute;top:3px;right:3px;display:flex;flex-direction:column;align-items:center;gap:1px;z-index:2;}
-.card .badges img{width:17px;height:17px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.5));}
-.card .badges .sep{width:16px;height:1px;background:rgba(255,255,255,.4);margin:4px 0;flex:0 0 auto;}
-.card img.sp{width:74%;height:58%;object-fit:contain;margin-top:9px;margin-right:6px;}
+.card .badges img{width:17px;height:17px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));}
+.card .badges .sep{width:16px;height:1px;background:var(--border);margin:4px 0;flex:0 0 auto;}
+.card img.sp{width:74%;height:58%;object-fit:contain;margin-top:34px;margin-right:6px;}
 .card .nm{font-size:10px;font-weight:700;line-height:1.15;text-align:center;margin-top:auto;word-break:keep-all;}
 .empty{text-align:center;color:var(--sub);padding:50px 20px;font-size:13px;}
 .rlist{display:flex;flex-direction:column;gap:8px;padding:12px 14px 44px;}
-.rrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid #262b3b;border-radius:13px;padding:10px 12px;}
+.rrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:10px 12px;}
 .rrow .ricon{width:62px;height:62px;flex:0 0 auto;object-fit:contain;}
 .rinfo{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:12.5px;align-items:start;flex:1;}
 .rinfo .k{color:var(--sub);font-weight:700;white-space:nowrap;}
@@ -53,26 +57,78 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#1a1d2
 .ing{display:inline-flex;align-items:center;gap:3px;background:var(--card2);border-radius:7px;padding:2px 7px 2px 4px;font-size:11.5px;}
 .ing img{width:17px;height:17px;object-fit:contain;}
 .plus{color:var(--sub);font-weight:800;}
-.req{display:inline-flex;align-items:center;gap:3px;background:var(--accent);border:none;border-radius:7px;padding:2px 8px 2px 5px;font-size:11.5px;color:#1a1a1a;font-weight:700;}
+.req{display:inline-flex;align-items:center;gap:3px;background:var(--accent);border:none;border-radius:7px;padding:2px 8px 2px 5px;font-size:11.5px;color:#ffffff;font-weight:700;}
 .req img{width:15px;height:15px;object-fit:contain;}
+#menuOverlay{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:30;}
+#menuOverlay.open{display:block;}
+#mpanel{position:absolute;top:0;right:0;width:min(320px,88vw);height:100%;background:#ffffff;padding:18px 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);}
+#mclose{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--sub);font-size:20px;line-height:1;cursor:pointer;padding:4px;}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0 28px 6px 0;}
+.mtitle img{width:22px;height:22px;object-fit:contain;}
+.mtitle span{font-size:15px;font-weight:800;}
+.msec h3{font-size:12px;color:var(--sub);margin:16px 0 8px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
+.msec h3 .car{font-size:10px;color:var(--sub);transition:transform .2s;}
+.msec.collapsed h3{margin-bottom:0;}
+.msec.collapsed .car{transform:rotate(-90deg);}
+.msec.collapsed .chips{display:none;}
+#mpanel .chips{padding:0;}
+.mdivider{height:1px;background:var(--border);margin:14px 0 0;flex:0 0 auto;}
+.mgreet{display:none;font-size:12.5px;color:var(--sub);text-align:left;margin-top:30px;}
+.mgreet.show{display:block;}
+.mfooter{margin-top:auto;padding-top:6px;display:flex;gap:8px;}
+.mbig{flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:12px 8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;}
+.modal{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:40;align-items:center;justify-content:center;padding:24px;}
+.modal.open{display:flex;}
+.modal .box{background:#ffffff;border-radius:16px;padding:26px 22px;width:100%;max-width:300px;text-align:center;box-shadow:0 10px 40px rgba(43,33,64,.25);}
+.modal h2{font-size:16px;margin:0 0 14px;font-weight:800;color:var(--txt);}
+.modal input{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:10px;color:var(--txt);font-size:14px;padding:10px 12px;margin-bottom:9px;outline:none;font-family:inherit;}
+.modal input:focus{border-color:var(--accent);}
+.loginmsg{font-size:11.5px;color:#d1476b;min-height:14px;margin-bottom:4px;}
+.modal button.primary{margin-top:4px;width:100%;background:var(--accent);border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;color:#ffffff;cursor:pointer;}
+.modal button.secondary{margin-top:8px;width:100%;background:none;border:none;color:var(--sub);font-size:12.5px;padding:6px;cursor:pointer;}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1></div>
-  <div class="searchwrap"><input id="q" class="search" type="text" placeholder="이름·재료 검색"><button id="qclear" class="qclear" type="button">삭제</button></div>
-  <div class="cats">
-    <button class="cat" data-c="type">타입별</button>
-    <button class="cat" data-c="spec">특기별</button>
-    <button class="cat" data-c="flavor">맛별</button>
-    <button class="cat" data-c="recipe">음식 레시피</button>
+  <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
+  <div class="searchwrap">
+    <input id="q" class="search" type="text" placeholder="이름·재료 검색" autocomplete="off">
+    <button id="qclear" class="qclear" type="button">모두 지우기</button>
+    <div id="suggestBox" class="suggest"></div>
   </div>
-  <div class="chips" id="chips" style="display:none"></div>
-  <div class="toolbar"><span class="count" id="count"></span><button id="toggle" class="toggle" type="button" style="display:none">접기</button></div>
 </header>
 <div class="grid" id="main"></div>
 </div>
+<div id="menuOverlay">
+  <div id="mpanel">
+    <button id="mclose" type="button" aria-label="닫기">✕</button>
+    <div class="mtitle"><img referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><span>Pokémon Pokopia</span></div>
+    <div class="msec" data-key="type"><h3>타입<span class="car">▾</span></h3><div class="chips" id="chips-type"></div></div>
+    <div class="msec" data-key="spec"><h3>특기<span class="car">▾</span></h3><div class="chips" id="chips-spec"></div></div>
+    <div class="msec" data-key="flavor"><h3>좋아하는 맛<span class="car">▾</span></h3><div class="chips" id="chips-flavor"></div></div>
+    <div class="mdivider"></div>
+    <div class="msec" data-key="recipe"><h3>음식 레시피<span class="car">▾</span></h3><div class="chips" id="chips-recipe"></div></div>
+    <div id="mgreet" class="mgreet"></div>
+    <div class="mfooter">
+      <a class="mbig" href="https://iruroda.github.io/pokelab/" target="_blank" rel="noopener">Pokélab 메인으로</a>
+      <button class="mbig" id="loginBtn" type="button">로그인</button>
+    </div>
+  </div>
+</div>
+<div id="loginModal" class="modal">
+  <div class="box">
+    <h2 id="loginTitle">로그인</h2>
+    <input id="loginId" type="text" placeholder="아이디" autocomplete="username">
+    <input id="loginPw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <div id="loginMsg" class="loginmsg"></div>
+    <button class="primary" id="loginSubmit" type="button">로그인</button>
+    <button class="secondary" id="loginCancel" type="button">닫기</button>
+  </div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 
 const DATA=[{"no": 1, "dex": 1, "name": "이상해씨", "types": ["풀", "독"], "flavor": "단맛", "specs": ["재배"], "img": "img/001_isanghaessi.png"}, {"no": 2, "dex": 2, "name": "이상해풀", "types": ["풀", "독"], "flavor": "신맛", "specs": ["재배"], "img": "img/002_isanghaepul.png"}, {"no": 3, "dex": 3, "name": "이상해꽃", "types": ["풀", "독"], "flavor": "신맛", "specs": ["재배", "어지르기"], "img": "img/003_isanghaekkot.png"}, {"no": 4, "dex": 4, "name": "파이리", "types": ["불꽃"], "flavor": "매운맛", "specs": ["점화"], "img": "img/004_pairi.png"}, {"no": 5, "dex": 5, "name": "리자드", "types": ["불꽃"], "flavor": "매운맛", "specs": ["점화"], "img": "img/005_rijadeu.png"}, {"no": 6, "dex": 6, "name": "리자몽", "types": ["불꽃", "비행"], "flavor": "매운맛", "specs": ["점화", "공중날기"], "img": "img/006_rijamong.png"}, {"no": 7, "dex": 7, "name": "꼬부기", "types": ["물"], "flavor": "단맛", "specs": ["급수"], "img": "img/007_kkobugi.png"}, {"no": 8, "dex": 8, "name": "어니부기", "types": ["물"], "flavor": "매운맛", "specs": ["급수"], "img": "img/008_eonibugi.png"}, {"no": 9, "dex": 9, "name": "거북왕", "types": ["물"], "flavor": "신맛", "specs": ["급수", "거래"], "img": "img/009_geobugwa.png"}, {"no": 10, "dex": 16, "name": "구구", "types": ["노말", "비행"], "flavor": "신맛", "specs": ["공중날기", "탐색"], "img": "img/010_gugu.png"}, {"no": 11, "dex": 17, "name": "피죤", "types": ["노말", "비행"], "flavor": "매운맛", "specs": ["공중날기", "탐색"], "img": "img/011_pijyon.png"}, {"no": 12, "dex": 18, "name": "피죤투", "types": ["노말", "비행"], "flavor": "신맛", "specs": ["공중날기", "절삭"], "img": "img/012_pijyontu.png"}, {"no": 13, "dex": 43, "name": "뚜벅쵸", "types": ["풀", "독"], "flavor": "쓴맛", "specs": ["재배"], "img": "img/013_ttubeokchyo.png"}, {"no": 14, "dex": 44, "name": "냄새꼬", "types": ["풀", "독"], "flavor": "떫은맛", "specs": ["재배"], "img": "img/014_naemsaekko.png"}, {"no": 15, "dex": 45, "name": "라플레시아", "types": ["풀", "독"], "flavor": "쓴맛", "specs": ["재배", "어지르기"], "img": "img/015_rapeulresia.png"}, {"no": 16, "dex": 182, "name": "아르코", "types": ["풀"], "flavor": "신맛", "specs": ["재배", "분위기 메이킹"], "img": "img/016_areuko.png"}, {"no": 17, "dex": 46, "name": "파라스", "types": ["벌레", "풀"], "flavor": "쓴맛", "specs": ["탐색"], "img": "img/017_paraseu.png"}, {"no": 18, "dex": 47, "name": "파라섹트", "types": ["벌레", "풀"], "flavor": "쓴맛", "specs": ["탐색"], "img": "img/018_parasekteu.png"}, {"no": 19, "dex": 48, "name": "콘팡", "types": ["벌레", "독"], "flavor": "쓴맛", "specs": ["탐색"], "img": "img/019_konpang.png"}, {"no": 20, "dex": 49, "name": "도나리", "types": ["벌레", "독"], "flavor": "쓴맛", "specs": ["탐색"], "img": "img/020_donari.png"}, {"no": 21, "dex": 69, "name": "모다피", "types": ["풀", "독"], "flavor": "떫은맛", "specs": ["재배", "어지르기"], "img": "img/021_modapi.png"}, {"no": 22, "dex": 70, "name": "우츠동", "types": ["풀", "독"], "flavor": "쓴맛", "specs": ["재배", "어지르기"], "img": "img/022_ucheudong.png"}, {"no": 23, "dex": 71, "name": "우츠보트", "types": ["풀", "독"], "flavor": "쓴맛", "specs": ["재배", "절삭"], "img": "img/023_ucheuboteu.png"}, {"no": 24, "dex": 79, "name": "야돈", "types": ["물", "에스퍼"], "flavor": "떫은맛", "specs": ["급수", "하품"], "img": "img/024_yadon.png"}, {"no": 25, "dex": 80, "name": "야도란", "types": ["물", "에스퍼"], "flavor": "떫은맛", "specs": ["급수", "거래"], "img": "img/025_yadoran.png"}, {"no": 26, "dex": 199, "name": "야도킹", "types": ["물", "에스퍼"], "flavor": "신맛", "specs": ["급수", "순간이동"], "img": "img/026_yadoking.png"}, {"no": 27, "dex": 81, "name": "코일", "types": ["전기", "강철"], "flavor": "쓴맛", "specs": ["발전"], "img": "img/027_koil.png"}, {"no": 28, "dex": 82, "name": "레어코일", "types": ["전기", "강철"], "flavor": "쓴맛", "specs": ["발전"], "img": "img/028_reeokoil.png"}, {"no": 29, "dex": 462, "name": "자포코일", "types": ["전기", "강철"], "flavor": "쓴맛", "specs": ["발전", "리사이클"], "img": "img/029_japokoil.png"}, {"no": 30, "dex": 95, "name": "롱스톤", "types": ["바위", "땅"], "flavor": "떫은맛", "specs": ["분쇄", "땅고르기"], "img": "img/030_rongseuton.png"}, {"no": 31, "dex": 208, "name": "강철톤", "types": ["강철", "땅"], "flavor": "신맛", "specs": ["분쇄", "땅고르기"], "img": "img/031_gangcheolton.png"}, {"no": 32, "dex": 104, "name": "탕구리", "types": ["땅"], "flavor": "쓴맛", "specs": ["건축"], "img": "img/032_tangguri.png"}, {"no": 33, "dex": 105, "name": "텅구리", "types": ["땅"], "flavor": "떫은맛", "specs": ["건축"], "img": "img/033_teongguri.png"}, {"no": 34, "dex": 236, "name": "배루키", "types": ["격투"], "flavor": "매운맛", "specs": ["거래"], "img": "img/034_baeruki.png"}, {"no": 35, "dex": 106, "name": "시라소몬", "types": ["격투"], "flavor": "매운맛", "specs": ["거래"], "img": "img/035_sirasomon.png"}, {"no": 36, "dex": 107, "name": "홍수몬", "types": ["격투"], "flavor": "단맛", "specs": ["거래"], "img": "img/036_hongsumon.png"}, {"no": 37, "dex": 237, "name": "카포에라", "types": ["격투"], "flavor": "단맛", "specs": ["거래"], "img": "img/037_kapoera.png"}, {"no": 38, "dex": 109, "name": "또가스", "types": ["독"], "flavor": "쓴맛", "specs": ["리사이클"], "img": "img/038_ttogaseu.png"}, {"no": 39, "dex": 110, "name": "또도가스", "types": ["독"], "flavor": "쓴맛", "specs": ["리사이클"], "img": "img/039_ttodogaseu.png"}, {"no": 40, "dex": 114, "name": "덩쿠리", "types": ["풀"], "flavor": "신맛", "specs": ["재배", "어지르기"], "img": "img/040_deongkuri.png"}, {"no": 41, "dex": 465, "name": "덩쿠림보", "types": ["풀"], "flavor": "쓴맛", "specs": ["재배", "어지르기"], "img": "img/041_deongkurimbo.png"}, {"no": 41, "dex": 465, "name": "덩쿠림보(박사)", "types": ["풀"], "flavor": "쓴맛", "specs": ["감정"], "img": "img/041_deongkurimbo_baksa.png"}, {"no": 42, "dex": 123, "name": "스라크", "types": ["벌레", "비행"], "flavor": "매운맛", "specs": ["절삭"], "img": "img/042_seurakeu.png"}, {"no": 43, "dex": 212, "name": "핫삼", "types": ["벌레", "강철"], "flavor": "쓴맛", "specs": ["절삭"], "img": "img/043_hatsam.png"}, {"no": 44, "dex": 127, "name": "쁘사이저", "types": ["벌레"], "flavor": "매운맛", "specs": ["절삭", "건축"], "img": "img/044_ppeusaijeo.png"}, {"no": 45, "dex": 129, "name": "잉어킹", "types": ["물"], "flavor": "단맛", "specs": ["불명"], "img": "img/045_ingeoking.png"}, {"no": 46, "dex": 130, "name": "갸라도스", "types": ["물", "비행"], "flavor": "매운맛", "specs": ["급수"], "img": "img/046_gyaradoseu.png"}, {"no": 47, "dex": 132, "name": "메타몽", "types": ["노말"], "flavor": "불명", "specs": ["변신"], "img": "img/047_metamong.png"}, {"no": 48, "dex": 163, "name": "부우부", "types": ["노말", "비행"], "flavor": "떫은맛", "specs": ["거래", "공중날기"], "img": "img/048_buubu.png"}, {"no": 49, "dex": 164, "name": "야부엉", "types": ["노말", "비행"], "flavor": "떫은맛", "specs": ["거래", "공중날기"], "img": "img/049_yabueong.png"}, {"no": 50, "dex": 214, "name": "헤라크로스", "types": ["벌레", "격투"], "flavor": "단맛", "specs": ["절삭", "건축"], "img": "img/050_herakeuroseu.png"}, {"no": 51, "dex": 313, "name": "볼비트", "types": ["벌레"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/051_bolbiteu.png"}, {"no": 52, "dex": 314, "name": "네오비트", "types": ["벌레"], "flavor": "신맛", "specs": ["분위기 메이킹"], "img": "img/052_neobiteu.png"}, {"no": 53, "dex": 316, "name": "꼴깍몬", "types": ["독"], "flavor": "매운맛", "specs": ["수납"], "img": "img/053_kkolkkakmon.png"}, {"no": 54, "dex": 317, "name": "꿀꺽몬", "types": ["독"], "flavor": "쓴맛", "specs": ["수납"], "img": "img/054_kkulkkeokmon.png"}, {"no": 55, "dex": 331, "name": "선인왕", "types": ["풀"], "flavor": "매운맛", "specs": ["재배"], "img": "img/055_seoniwang.png"}, {"no": 56, "dex": 332, "name": "밤선인", "types": ["풀", "악"], "flavor": "떫은맛", "specs": ["재배", "어지르기"], "img": "img/056_bamseoni.png"}, {"no": 57, "dex": 415, "name": "세꿀버리", "types": ["벌레", "비행"], "flavor": "단맛", "specs": ["어지르기"], "img": "img/057_sekkulbeori.png"}, {"no": 58, "dex": 416, "name": "비퀸", "types": ["벌레", "비행"], "flavor": "단맛", "specs": ["꿀 모으기", "탐색"], "img": "img/058_bikwin.png"}, {"no": 59, "dex": 422, "name": "깝질무(서쪽바다)", "types": ["물"], "flavor": "신맛", "specs": ["급수"], "img": "img/059_kkapjilmu_seojjokbada.png"}, {"no": 59, "dex": 422, "name": "깝질무(동쪽바다)", "types": ["물"], "flavor": "떫은맛", "specs": ["급수"], "img": "img/059_kkapjilmu_dongjjokbada.png"}, {"no": 60, "dex": 423, "name": "트리토돈(서쪽바다)", "types": ["물", "땅"], "flavor": "신맛", "specs": ["급수", "거래"], "img": "img/060_teuritodon_seojjokbada.png"}, {"no": 60, "dex": 423, "name": "트리토돈(동쪽바다)", "types": ["물", "땅"], "flavor": "떫은맛", "specs": ["급수", "거래"], "img": "img/060_teuritodon_dongjjokbada.png"}, {"no": 61, "dex": 425, "name": "흔들풍손", "types": ["고스트", "비행"], "flavor": "쓴맛", "specs": ["꿈섬"], "img": "img/061_heundeulpungson.png"}, {"no": 62, "dex": 426, "name": "둥실라이드", "types": ["고스트", "비행"], "flavor": "쓴맛", "specs": ["공중날기", "분류"], "img": "img/062_dungsilraideu.png"}, {"no": 63, "dex": 529, "name": "두더류", "types": ["땅"], "flavor": "신맛", "specs": ["탐색"], "img": "img/063_dudeoryu.png"}, {"no": 64, "dex": 530, "name": "몰드류", "types": ["땅", "강철"], "flavor": "신맛", "specs": ["탐색", "절삭"], "img": "img/064_moldeuryu.png"}, {"no": 65, "dex": 532, "name": "으랏차", "types": ["격투"], "flavor": "매운맛", "specs": ["건축"], "img": "img/065_euratcha.png"}, {"no": 66, "dex": 533, "name": "토쇠골", "types": ["격투"], "flavor": "매운맛", "specs": ["건축"], "img": "img/066_tosoegol.png"}, {"no": 67, "dex": 534, "name": "노보청", "types": ["격투"], "flavor": "매운맛", "specs": ["건축", "분쇄"], "img": "img/067_nobocheong.png"}, {"no": 68, "dex": 607, "name": "불켜미", "types": ["고스트", "불꽃"], "flavor": "쓴맛", "specs": ["점화"], "img": "img/068_bulkyeomi.png"}, {"no": 69, "dex": 608, "name": "램프라", "types": ["고스트", "불꽃"], "flavor": "쓴맛", "specs": ["점화"], "img": "img/069_raempeura.png"}, {"no": 70, "dex": 609, "name": "샹델라", "types": ["고스트", "불꽃"], "flavor": "떫은맛", "specs": ["점화"], "img": "img/070_syangdelra.png"}, {"no": 71, "dex": 610, "name": "터검니", "types": ["드래곤"], "flavor": "단맛", "specs": ["절삭"], "img": "img/071_teogeomni.png"}, {"no": 72, "dex": 611, "name": "액슨도", "types": ["드래곤"], "flavor": "매운맛", "specs": ["절삭"], "img": "img/072_aekseundo.png"}, {"no": 73, "dex": 612, "name": "액스라이즈", "types": ["드래곤"], "flavor": "신맛", "specs": ["절삭", "어지르기"], "img": "img/073_aekseuraijeu.png"}, {"no": 74, "dex": 704, "name": "미끄메라", "types": ["드래곤"], "flavor": "단맛", "specs": ["급수"], "img": "img/074_mikkeumera.png"}, {"no": 75, "dex": 705, "name": "미끄네일", "types": ["드래곤"], "flavor": "단맛", "specs": ["급수"], "img": "img/075_mikkeuneil.png"}, {"no": 76, "dex": 706, "name": "미끄래곤", "types": ["드래곤"], "flavor": "신맛", "specs": ["급수", "거래"], "img": "img/076_mikkeuraegon.png"}, {"no": 77, "dex": 845, "name": "윽우지", "types": ["비행", "물"], "flavor": "쓴맛", "specs": ["공중날기", "급수"], "img": "img/077_euguji.png"}, {"no": 78, "dex": 172, "name": "피츄", "types": ["전기"], "flavor": "단맛", "specs": ["발전"], "img": "img/078_pichyu.png"}, {"no": 79, "dex": 25, "name": "피카츄", "types": ["전기"], "flavor": "신맛", "specs": ["발전"], "img": "img/079_pikachyu.png"}, {"no": 79, "dex": 25, "name": "피카츄(창백한 색)", "types": ["전기"], "flavor": "단맛", "specs": ["발광"], "img": "img/079_pikachyu_changbaekhan_saek.png"}, {"no": 80, "dex": 26, "name": "라이츄", "types": ["전기"], "flavor": "신맛", "specs": ["발전", "분위기 메이킹"], "img": "img/080_raichyu.png"}, {"no": 81, "dex": 41, "name": "주뱃", "types": ["독", "비행"], "flavor": "매운맛", "specs": ["탐색"], "img": "img/081_jubaet.png"}, {"no": 82, "dex": 42, "name": "골뱃", "types": ["독", "비행"], "flavor": "매운맛", "specs": ["탐색"], "img": "img/082_golbaet.png"}, {"no": 83, "dex": 169, "name": "크로뱃", "types": ["독", "비행"], "flavor": "떫은맛", "specs": ["탐색", "절삭"], "img": "img/083_keurobaet.png"}, {"no": 84, "dex": 52, "name": "나옹", "types": ["노말"], "flavor": "매운맛", "specs": ["거래"], "img": "img/084_naong.png"}, {"no": 85, "dex": 53, "name": "페르시온", "types": ["노말"], "flavor": "신맛", "specs": ["거래", "탐색"], "img": "img/085_pereusion.png"}, {"no": 86, "dex": 54, "name": "고라파덕", "types": ["물"], "flavor": "떫은맛", "specs": ["탐색"], "img": "img/086_gorapadeok.png"}, {"no": 87, "dex": 55, "name": "골덕", "types": ["물"], "flavor": "떫은맛", "specs": ["탐색"], "img": "img/087_goldeok.png"}, {"no": 88, "dex": 58, "name": "가디", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화", "탐색"], "img": "img/088_gadi.png"}, {"no": 89, "dex": 59, "name": "윈디", "types": ["불꽃"], "flavor": "매운맛", "specs": ["점화", "탐색"], "img": "img/089_windi.png"}, {"no": 90, "dex": 83, "name": "파오리", "types": ["노말", "비행"], "flavor": "매운맛", "specs": ["절삭", "건축"], "img": "img/090_paori.png"}, {"no": 91, "dex": 88, "name": "질퍽이", "types": ["독"], "flavor": "쓴맛", "specs": ["어지르기"], "img": "img/091_jilpeogi.png"}, {"no": 92, "dex": 89, "name": "질뻐기", "types": ["독"], "flavor": "쓴맛", "specs": ["어지르기"], "img": "img/092_jilppeogi.png"}, {"no": 93, "dex": 92, "name": "고오스", "types": ["고스트", "독"], "flavor": "매운맛", "specs": ["분류", "거래"], "img": "img/093_gooseu.png"}, {"no": 94, "dex": 93, "name": "고우스트", "types": ["고스트", "독"], "flavor": "매운맛", "specs": ["분류", "거래"], "img": "img/094_gouseuteu.png"}, {"no": 95, "dex": 94, "name": "팬텀", "types": ["고스트", "독"], "flavor": "단맛", "specs": ["분류", "거래"], "img": "img/095_paenteom.png"}, {"no": 96, "dex": 100, "name": "찌리리공", "types": ["전기"], "flavor": "쓴맛", "specs": ["발전", "폭발"], "img": "img/096_jjiririgong.png"}, {"no": 97, "dex": 101, "name": "붐볼", "types": ["전기"], "flavor": "신맛", "specs": ["발전", "폭발"], "img": "img/097_bumbol.png"}, {"no": 98, "dex": 102, "name": "아라리", "types": ["풀", "에스퍼"], "flavor": "매운맛", "specs": ["재배", "순간이동"], "img": "img/098_arari.png"}, {"no": 99, "dex": 103, "name": "나시", "types": ["풀", "에스퍼"], "flavor": "떫은맛", "specs": ["재배", "순간이동"], "img": "img/099_nasi.png"}, {"no": 100, "dex": 440, "name": "핑복", "types": ["노말"], "flavor": "단맛", "specs": ["거래"], "img": "img/100_pingbok.png"}, {"no": 101, "dex": 113, "name": "럭키", "types": ["노말"], "flavor": "단맛", "specs": ["거래"], "img": "img/101_reokki.png"}, {"no": 102, "dex": 242, "name": "해피너스", "types": ["노말"], "flavor": "신맛", "specs": ["거래", "어지르기"], "img": "img/102_haepineoseu.png"}, {"no": 103, "dex": 239, "name": "에레키드", "types": ["전기"], "flavor": "단맛", "specs": ["발전"], "img": "img/103_erekideu.png"}, {"no": 104, "dex": 125, "name": "에레브", "types": ["전기"], "flavor": "매운맛", "specs": ["발전"], "img": "img/104_erebeu.png"}, {"no": 105, "dex": 466, "name": "에레키블", "types": ["전기"], "flavor": "신맛", "specs": ["발전", "분쇄"], "img": "img/105_erekibeul.png"}, {"no": 106, "dex": 131, "name": "라프라스", "types": ["물", "얼음"], "flavor": "신맛", "specs": ["급수"], "img": "img/106_rapeuraseu.png"}, {"no": 107, "dex": 446, "name": "먹고자", "types": ["노말"], "flavor": "떫은맛", "specs": ["땅고르기"], "img": "img/107_meokgoja.png"}, {"no": 108, "dex": 143, "name": "잠만보", "types": ["노말"], "flavor": "떫은맛", "specs": ["거래", "땅고르기"], "img": "img/108_jammanbo.png"}, {"no": 108, "dex": 143, "name": "잠만보(이끼투성이)", "types": ["노말"], "flavor": "매운맛", "specs": ["먹보"], "img": "img/108_jammanbo_ikkituseongi.png"}, {"no": 109, "dex": 167, "name": "페이검", "types": ["벌레", "독"], "flavor": "쓴맛", "specs": ["어지르기"], "img": "img/109_peigeom.png"}, {"no": 110, "dex": 168, "name": "아리아도스", "types": ["벌레", "독"], "flavor": "신맛", "specs": ["어지르기"], "img": "img/110_ariadoseu.png"}, {"no": 111, "dex": 179, "name": "메리프", "types": ["전기"], "flavor": "단맛", "specs": ["발전", "어지르기"], "img": "img/111_meripeu.png"}, {"no": 112, "dex": 180, "name": "보송송", "types": ["전기"], "flavor": "쓴맛", "specs": ["발전", "어지르기"], "img": "img/112_bosongsong.png"}, {"no": 113, "dex": 181, "name": "전룡", "types": ["전기"], "flavor": "신맛", "specs": ["발전", "거래"], "img": "img/113_jeonryong.png"}, {"no": 114, "dex": 298, "name": "루리리", "types": ["노말", "페어리"], "flavor": "신맛", "specs": ["급수", "분위기 메이킹"], "img": "img/114_ruriri.png"}, {"no": 115, "dex": 183, "name": "마릴", "types": ["물", "페어리"], "flavor": "신맛", "specs": ["급수", "분위기 메이킹"], "img": "img/115_maril.png"}, {"no": 116, "dex": 184, "name": "마릴리", "types": ["물", "페어리"], "flavor": "신맛", "specs": ["급수", "건축"], "img": "img/116_marilri.png"}, {"no": 117, "dex": 194, "name": "우파(팔데아의 모습)", "types": ["독", "땅"], "flavor": "신맛", "specs": ["어지르기"], "img": "img/117_upa_paldeaui_moseup.png"}, {"no": 118, "dex": 980, "name": "토오", "types": ["독", "땅"], "flavor": "쓴맛", "specs": ["어지르기", "땅고르기"], "img": "img/118_too.png"}, {"no": 119, "dex": 235, "name": "루브도(페인터)", "types": ["노말"], "flavor": "떫은맛", "specs": ["페인팅"], "img": "img/119_rubeudo_peinteo.png"}, {"no": 120, "dex": 255, "name": "아차모", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/120_achamo.png"}, {"no": 121, "dex": 256, "name": "영치코", "types": ["불꽃", "격투"], "flavor": "매운맛", "specs": ["점화", "건축"], "img": "img/121_yeongchiko.png"}, {"no": 122, "dex": 257, "name": "번치코", "types": ["불꽃", "격투"], "flavor": "매운맛", "specs": ["점화", "건축"], "img": "img/122_beonchiko.png"}, {"no": 123, "dex": 278, "name": "갈모매", "types": ["물", "비행"], "flavor": "떫은맛", "specs": ["급수", "공중날기"], "img": "img/123_galmomae.png"}, {"no": 124, "dex": 279, "name": "패리퍼", "types": ["물", "비행"], "flavor": "떫은맛", "specs": ["급수", "공중날기"], "img": "img/124_paeripeo.png"}, {"no": 125, "dex": 296, "name": "마크탕", "types": ["격투"], "flavor": "단맛", "specs": ["건축", "땅고르기"], "img": "img/125_makeutang.png"}, {"no": 126, "dex": 297, "name": "하리뭉", "types": ["격투"], "flavor": "매운맛", "specs": ["건축", "땅고르기"], "img": "img/126_harimung.png"}, {"no": 127, "dex": 359, "name": "앱솔", "types": ["악"], "flavor": "떫은맛", "specs": ["절삭"], "img": "img/127_aepsol.png"}, {"no": 128, "dex": 393, "name": "팽도리", "types": ["물"], "flavor": "단맛", "specs": ["급수"], "img": "img/128_paengdori.png"}, {"no": 129, "dex": 394, "name": "팽태자", "types": ["물"], "flavor": "떫은맛", "specs": ["급수", "거래"], "img": "img/129_paengtaeja.png"}, {"no": 130, "dex": 395, "name": "엠페르트", "types": ["물", "강철"], "flavor": "쓴맛", "specs": ["급수", "거래"], "img": "img/130_empereuteu.png"}, {"no": 131, "dex": 531, "name": "다부니", "types": ["노말"], "flavor": "쓴맛", "specs": ["거래"], "img": "img/131_dabuni.png"}, {"no": 132, "dex": 568, "name": "깨봉이", "types": ["독"], "flavor": "쓴맛", "specs": ["리사이클"], "img": "img/132_kkaebongi.png"}, {"no": 133, "dex": 569, "name": "더스트나", "types": ["독"], "flavor": "신맛", "specs": ["리사이클", "어지르기"], "img": "img/133_deoseuteuna.png"}, {"no": 134, "dex": 570, "name": "조로아", "types": ["악"], "flavor": "신맛", "specs": ["거래"], "img": "img/134_joroa.png"}, {"no": 135, "dex": 571, "name": "조로아크", "types": ["악"], "flavor": "매운맛", "specs": ["거래", "절삭"], "img": "img/135_joroakeu.png"}, {"no": 136, "dex": 572, "name": "치라미", "types": ["노말"], "flavor": "단맛", "specs": ["분류"], "img": "img/136_chirami.png"}, {"no": 137, "dex": 573, "name": "치라치노", "types": ["노말"], "flavor": "신맛", "specs": ["분류", "리사이클"], "img": "img/137_chirachino.png"}, {"no": 138, "dex": 736, "name": "턱지충이", "types": ["벌레"], "flavor": "떫은맛", "specs": ["절삭"], "img": "img/138_teokjichungi.png"}, {"no": 139, "dex": 737, "name": "전지충이", "types": ["벌레", "전기"], "flavor": "쓴맛", "specs": ["발전", "절삭"], "img": "img/139_jeonjichungi.png"}, {"no": 140, "dex": 738, "name": "투구뿌논", "types": ["벌레", "전기"], "flavor": "떫은맛", "specs": ["발전", "절삭"], "img": "img/140_tuguppunon.png"}, {"no": 141, "dex": 778, "name": "따라큐", "types": ["고스트", "페어리"], "flavor": "쓴맛", "specs": ["거래"], "img": "img/141_ttarakyu.png"}, {"no": 142, "dex": 921, "name": "빠모", "types": ["전기"], "flavor": "단맛", "specs": ["발전"], "img": "img/142_ppamo.png"}, {"no": 143, "dex": 922, "name": "빠모트", "types": ["전기", "격투"], "flavor": "단맛", "specs": ["발전", "분쇄"], "img": "img/143_ppamoteu.png"}, {"no": 144, "dex": 923, "name": "빠르모트", "types": ["전기", "격투"], "flavor": "떫은맛", "specs": ["발전", "분쇄"], "img": "img/144_ppareumoteu.png"}, {"no": 145, "dex": 978, "name": "싸리용(젖힌 모습)", "types": ["드래곤", "물"], "flavor": "신맛", "specs": ["거래"], "img": "img/145_ssariyong_jeothin_moseup.png"}, {"no": 145, "dex": 978, "name": "싸리용(늘어진 모습)", "types": ["드래곤", "물"], "flavor": "단맛", "specs": ["거래"], "img": "img/145_ssariyong_neureojin_moseup.png"}, {"no": 145, "dex": 978, "name": "싸리용(뻗은 모습)", "types": ["드래곤", "물"], "flavor": "매운맛", "specs": ["거래"], "img": "img/145_ssariyong_ppeodeu_moseup.png"}, {"no": 146, "dex": 23, "name": "아보", "types": ["독"], "flavor": "매운맛", "specs": ["탐색"], "img": "img/146_abo.png"}, {"no": 147, "dex": 24, "name": "아보크", "types": ["독"], "flavor": "매운맛", "specs": ["탐색"], "img": "img/147_abokeu.png"}, {"no": 148, "dex": 173, "name": "삐", "types": ["페어리"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/148_ppi.png"}, {"no": 149, "dex": 35, "name": "삐삐", "types": ["페어리"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/149_ppippi.png"}, {"no": 150, "dex": 36, "name": "픽시", "types": ["페어리"], "flavor": "신맛", "specs": ["분위기 메이킹", "거래"], "img": "img/150_piksi.png"}, {"no": 151, "dex": 174, "name": "푸푸린", "types": ["노말", "페어리"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/151_pupurin.png"}, {"no": 152, "dex": 39, "name": "푸린", "types": ["노말", "페어리"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/152_purin.png"}, {"no": 153, "dex": 40, "name": "푸크린", "types": ["노말", "페어리"], "flavor": "신맛", "specs": ["분위기 메이킹", "거래"], "img": "img/153_pukeurin.png"}, {"no": 154, "dex": 50, "name": "디그다", "types": ["땅"], "flavor": "쓴맛", "specs": ["분위기 메이킹"], "img": "img/154_digeuda.png"}, {"no": 155, "dex": 51, "name": "닥트리오", "types": ["땅"], "flavor": "매운맛", "specs": ["분위기 메이킹", "분쇄"], "img": "img/155_dakteurio.png"}, {"no": 156, "dex": 66, "name": "알통몬", "types": ["격투"], "flavor": "매운맛", "specs": ["건축", "분류"], "img": "img/156_altongmon.png"}, {"no": 157, "dex": 67, "name": "근육몬", "types": ["격투"], "flavor": "신맛", "specs": ["건축", "분류"], "img": "img/157_geunyumon.png"}, {"no": 158, "dex": 68, "name": "괴력몬", "types": ["격투"], "flavor": "매운맛", "specs": ["건축", "분류"], "img": "img/158_goeryeokmon.png"}, {"no": 159, "dex": 74, "name": "꼬마돌", "types": ["바위", "땅"], "flavor": "떫은맛", "specs": ["분쇄"], "img": "img/159_kkomadol.png"}, {"no": 160, "dex": 75, "name": "데구리", "types": ["바위", "땅"], "flavor": "쓴맛", "specs": ["분쇄"], "img": "img/160_deguri.png"}, {"no": 161, "dex": 76, "name": "딱구리", "types": ["바위", "땅"], "flavor": "신맛", "specs": ["분쇄", "거래"], "img": "img/161_ttakguri.png"}, {"no": 162, "dex": 240, "name": "마그비", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/162_mageubi.png"}, {"no": 163, "dex": 126, "name": "마그마", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/163_mageuma.png"}, {"no": 164, "dex": 467, "name": "마그마번", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화", "분쇄"], "img": "img/164_mageumabeon.png"}, {"no": 165, "dex": 438, "name": "꼬지지", "types": ["바위"], "flavor": "신맛", "specs": ["땅고르기"], "img": "img/165_kkojiji.png"}, {"no": 166, "dex": 185, "name": "꼬지모", "types": ["바위"], "flavor": "떫은맛", "specs": ["거래"], "img": "img/166_kkojimo.png"}, {"no": 167, "dex": 198, "name": "니로우", "types": ["악", "비행"], "flavor": "쓴맛", "specs": ["거래", "공중날기"], "img": "img/167_nirou.png"}, {"no": 168, "dex": 430, "name": "돈크로우", "types": ["악", "비행"], "flavor": "쓴맛", "specs": ["거래", "공중날기"], "img": "img/168_donkeurou.png"}, {"no": 169, "dex": 246, "name": "애버라스", "types": ["바위", "땅"], "flavor": "단맛", "specs": ["분쇄", "땅고르기"], "img": "img/169_aebeoraseu.png"}, {"no": 170, "dex": 247, "name": "데기라스", "types": ["바위", "땅"], "flavor": "떫은맛", "specs": ["분쇄", "땅고르기"], "img": "img/170_degiraseu.png"}, {"no": 171, "dex": 248, "name": "마기라스", "types": ["바위", "악"], "flavor": "매운맛", "specs": ["분쇄", "땅고르기"], "img": "img/171_magiraseu.png"}, {"no": 172, "dex": 270, "name": "연꽃몬", "types": ["물", "풀"], "flavor": "떫은맛", "specs": ["급수"], "img": "img/172_yeonkkotmon.png"}, {"no": 173, "dex": 271, "name": "로토스", "types": ["물", "풀"], "flavor": "쓴맛", "specs": ["급수"], "img": "img/173_rotoseu.png"}, {"no": 174, "dex": 272, "name": "로파파", "types": ["물", "풀"], "flavor": "떫은맛", "specs": ["급수", "분위기 메이킹"], "img": "img/174_ropapa.png"}, {"no": 175, "dex": 303, "name": "입치트", "types": ["강철", "페어리"], "flavor": "떫은맛", "specs": ["거래", "건축"], "img": "img/175_ipchiteu.png"}, {"no": 176, "dex": 324, "name": "코터스", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화"], "img": "img/176_koteoseu.png"}, {"no": 177, "dex": 401, "name": "귀뚤뚜기", "types": ["벌레"], "flavor": "쓴맛", "specs": ["분위기 메이킹"], "img": "img/177_gwittulttugi.png"}, {"no": 178, "dex": 402, "name": "귀뚤톡크", "types": ["벌레"], "flavor": "매운맛", "specs": ["분위기 메이킹"], "img": "img/178_gwittultokkeu.png"}, {"no": 179, "dex": 441, "name": "페라페", "types": ["노말", "비행"], "flavor": "단맛", "specs": ["분위기 메이킹", "공중날기"], "img": "img/179_perape.png"}, {"no": 180, "dex": 447, "name": "리오르", "types": ["격투"], "flavor": "매운맛", "specs": ["건축"], "img": "img/180_rioreu.png"}, {"no": 181, "dex": 448, "name": "루카리오", "types": ["격투", "강철"], "flavor": "떫은맛", "specs": ["건축"], "img": "img/181_rukario.png"}, {"no": 182, "dex": 479, "name": "로토무(스테레오로토무)", "types": ["전기", "고스트"], "flavor": "쓴맛", "specs": ["DJ"], "img": "img/182_rotomu_seutereorotomu.png"}, {"no": 183, "dex": 636, "name": "활화르바", "types": ["벌레", "불꽃"], "flavor": "쓴맛", "specs": ["점화", "어지르기"], "img": "img/183_hwalhwareuba.png"}, {"no": 184, "dex": 637, "name": "불카모스", "types": ["벌레", "불꽃"], "flavor": "떫은맛", "specs": ["점화", "어지르기"], "img": "img/184_bulkamoseu.png"}, {"no": 185, "dex": 722, "name": "나몰빼미", "types": ["풀", "비행"], "flavor": "떫은맛", "specs": ["재배"], "img": "img/185_namolppaemi.png"}, {"no": 186, "dex": 723, "name": "빼미스로우", "types": ["풀", "비행"], "flavor": "신맛", "specs": ["재배", "절삭"], "img": "img/186_ppaemiseurou.png"}, {"no": 187, "dex": 724, "name": "모크나이퍼", "types": ["풀", "고스트"], "flavor": "떫은맛", "specs": ["재배", "절삭"], "img": "img/187_mokeunaipeo.png"}, {"no": 188, "dex": 813, "name": "염버니", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화"], "img": "img/188_yeombeoni.png"}, {"no": 189, "dex": 814, "name": "래비풋", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화"], "img": "img/189_raebiput.png"}, {"no": 190, "dex": 815, "name": "에이스번", "types": ["불꽃"], "flavor": "매운맛", "specs": ["점화", "분위기 메이킹"], "img": "img/190_eiseubeon.png"}, {"no": 191, "dex": 819, "name": "탐리스", "types": ["노말"], "flavor": "떫은맛", "specs": ["탐색", "분위기 메이킹"], "img": "img/191_tamriseu.png"}, {"no": 192, "dex": 820, "name": "요씽리스(요리사)", "types": ["노말"], "flavor": "단맛", "specs": ["파티"], "img": "img/192_yossingriseu_yorisa.png"}, {"no": 193, "dex": 837, "name": "탄동", "types": ["바위"], "flavor": "신맛", "specs": ["점화", "분류"], "img": "img/193_tandong.png"}, {"no": 194, "dex": 838, "name": "탄차곤", "types": ["바위", "불꽃"], "flavor": "매운맛", "specs": ["점화", "분류"], "img": "img/194_tanchagon.png"}, {"no": 195, "dex": 839, "name": "석탄산", "types": ["바위", "불꽃"], "flavor": "매운맛", "specs": ["점화", "분류"], "img": "img/195_seoktansan.png"}, {"no": 196, "dex": 848, "name": "일레즌", "types": ["전기", "독"], "flavor": "단맛", "specs": ["발전"], "img": "img/196_ilrejeun.png"}, {"no": 197, "dex": 849, "name": "스트린더(하이한 모습)", "types": ["전기", "독"], "flavor": "매운맛", "specs": ["발전", "분위기 메이킹"], "img": "img/197_seuteurindeo_haihan_moseup.png"}, {"no": 197, "dex": 849, "name": "스트린더(로우한 모습)", "types": ["전기", "독"], "flavor": "쓴맛", "specs": ["발전", "분위기 메이킹"], "img": "img/197_seuteurindeo_rouhan_moseup.png"}, {"no": 198, "dex": 926, "name": "쫀도기", "types": ["페어리"], "flavor": "단맛", "specs": ["탐색"], "img": "img/198_jjondogi.png"}, {"no": 199, "dex": 927, "name": "바우첼", "types": ["페어리"], "flavor": "신맛", "specs": ["탐색", "거래"], "img": "img/199_bauchel.png"}, {"no": 200, "dex": 935, "name": "카르본", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/200_kareubon.png"}, {"no": 201, "dex": 936, "name": "카디나르마", "types": ["불꽃", "에스퍼"], "flavor": "매운맛", "specs": ["점화", "거래"], "img": "img/201_kadinareuma.png"}, {"no": 202, "dex": 937, "name": "파라블레이즈", "types": ["불꽃", "고스트"], "flavor": "쓴맛", "specs": ["점화", "거래"], "img": "img/202_parabeulreijeu.png"}, {"no": 203, "dex": 969, "name": "초롱순", "types": ["바위", "독"], "flavor": "쓴맛", "specs": ["어지르기"], "img": "img/203_chorongsun.png"}, {"no": 204, "dex": 970, "name": "킬라플로르", "types": ["바위", "독"], "flavor": "쓴맛", "specs": ["어지르기"], "img": "img/204_kilrapeulroreu.png"}, {"no": 205, "dex": 999, "name": "모으령", "types": ["고스트"], "flavor": "쓴맛", "specs": ["컬렉터"], "img": "img/205_moeuryeong.png"}, {"no": 206, "dex": 1000, "name": "타부자고", "types": ["강철", "고스트"], "flavor": "떫은맛", "specs": ["컬렉터"], "img": "img/206_tabujago.png"}, {"no": 207, "dex": 37, "name": "식스테일", "types": ["불꽃"], "flavor": "쓴맛", "specs": ["점화"], "img": "img/207_sikseuteil.png"}, {"no": 208, "dex": 38, "name": "나인테일", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화"], "img": "img/208_nainteil.png"}, {"no": 209, "dex": 60, "name": "발챙이", "types": ["물"], "flavor": "단맛", "specs": ["급수"], "img": "img/209_balchaengi.png"}, {"no": 210, "dex": 61, "name": "슈륙챙이", "types": ["물"], "flavor": "쓴맛", "specs": ["급수"], "img": "img/210_syuryukchaengi.png"}, {"no": 211, "dex": 62, "name": "강챙이", "types": ["물", "격투"], "flavor": "매운맛", "specs": ["급수", "건축"], "img": "img/211_gangchaengi.png"}, {"no": 212, "dex": 186, "name": "왕구리", "types": ["물"], "flavor": "신맛", "specs": ["급수", "분위기 메이킹"], "img": "img/212_wangguri.png"}, {"no": 213, "dex": 63, "name": "캐이시", "types": ["에스퍼"], "flavor": "떫은맛", "specs": ["순간이동"], "img": "img/213_kaeisi.png"}, {"no": 214, "dex": 64, "name": "윤겔라", "types": ["에스퍼"], "flavor": "떫은맛", "specs": ["순간이동"], "img": "img/214_yungelra.png"}, {"no": 215, "dex": 65, "name": "후딘", "types": ["에스퍼"], "flavor": "쓴맛", "specs": ["순간이동", "거래"], "img": "img/215_hudin.png"}, {"no": 216, "dex": 439, "name": "흉내내", "types": ["에스퍼", "페어리"], "flavor": "단맛", "specs": ["분류"], "img": "img/216_hyungnaenae.png"}, {"no": 217, "dex": 122, "name": "마임맨", "types": ["에스퍼", "페어리"], "flavor": "쓴맛", "specs": ["분류", "건축"], "img": "img/217_maimmaen.png"}, {"no": 218, "dex": 137, "name": "폴리곤", "types": ["노말"], "flavor": "쓴맛", "specs": ["리사이클"], "img": "img/218_polrigon.png"}, {"no": 219, "dex": 233, "name": "폴리곤2", "types": ["노말"], "flavor": "신맛", "specs": ["리사이클"], "img": "img/219_polrigon2.png"}, {"no": 220, "dex": 474, "name": "폴리곤Z", "types": ["노말"], "flavor": "떫은맛", "specs": ["레어 수집"], "img": "img/220_polrigonZ.png"}, {"no": 221, "dex": 147, "name": "미뇽", "types": ["드래곤"], "flavor": "단맛", "specs": ["급수"], "img": "img/221_minyong.png"}, {"no": 222, "dex": 148, "name": "신뇽", "types": ["드래곤"], "flavor": "단맛", "specs": ["급수"], "img": "img/222_sinnyong.png"}, {"no": 223, "dex": 149, "name": "망나뇽", "types": ["드래곤", "비행"], "flavor": "떫은맛", "specs": ["급수", "공중날기"], "img": "img/223_mangnanyong.png"}, {"no": 224, "dex": 155, "name": "브케인", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/224_beukein.png"}, {"no": 225, "dex": 156, "name": "마그케인", "types": ["불꽃"], "flavor": "단맛", "specs": ["점화"], "img": "img/225_mageukein.png"}, {"no": 226, "dex": 157, "name": "블레이범", "types": ["불꽃"], "flavor": "떫은맛", "specs": ["점화", "거래"], "img": "img/226_beulreibeom.png"}, {"no": 227, "dex": 200, "name": "무우마", "types": ["고스트"], "flavor": "떫은맛", "specs": ["거래"], "img": "img/227_muuma.png"}, {"no": 228, "dex": 429, "name": "무우마직", "types": ["고스트"], "flavor": "쓴맛", "specs": ["분류", "거래"], "img": "img/228_muumajik.png"}, {"no": 229, "dex": 203, "name": "키링키", "types": ["노말", "에스퍼"], "flavor": "신맛", "specs": ["분류"], "img": "img/229_kiringki.png"}, {"no": 230, "dex": 981, "name": "키키링", "types": ["노말", "에스퍼"], "flavor": "신맛", "specs": ["분류", "탐색"], "img": "img/230_kikiring.png"}, {"no": 231, "dex": 280, "name": "랄토스", "types": ["에스퍼", "페어리"], "flavor": "단맛", "specs": ["순간이동"], "img": "img/231_raltoseu.png"}, {"no": 232, "dex": 281, "name": "킬리아", "types": ["에스퍼", "페어리"], "flavor": "단맛", "specs": ["순간이동"], "img": "img/232_kilria.png"}, {"no": 233, "dex": 282, "name": "가디안", "types": ["에스퍼", "페어리"], "flavor": "신맛", "specs": ["순간이동", "거래"], "img": "img/233_gadian.png"}, {"no": 234, "dex": 475, "name": "엘레이드", "types": ["에스퍼", "격투"], "flavor": "매운맛", "specs": ["순간이동", "건축"], "img": "img/234_elreideu.png"}, {"no": 235, "dex": 311, "name": "플러시", "types": ["전기"], "flavor": "단맛", "specs": ["발전"], "img": "img/235_peulreosi.png"}, {"no": 236, "dex": 312, "name": "마이농", "types": ["전기"], "flavor": "매운맛", "specs": ["발전"], "img": "img/236_mainong.png"}, {"no": 237, "dex": 328, "name": "톱치", "types": ["땅"], "flavor": "매운맛", "specs": ["땅고르기", "어지르기"], "img": "img/237_topchi.png"}, {"no": 238, "dex": 329, "name": "비브라바", "types": ["땅", "드래곤"], "flavor": "쓴맛", "specs": ["땅고르기", "공중날기"], "img": "img/238_bibeuraba.png"}, {"no": 239, "dex": 330, "name": "플라이곤", "types": ["땅", "드래곤"], "flavor": "신맛", "specs": ["땅고르기", "공중날기"], "img": "img/239_peulraigon.png"}, {"no": 240, "dex": 333, "name": "파비코", "types": ["노말", "비행"], "flavor": "단맛", "specs": ["어지르기"], "img": "img/240_pabiko.png"}, {"no": 241, "dex": 334, "name": "파비코리", "types": ["드래곤", "비행"], "flavor": "신맛", "specs": ["어지르기", "공중날기"], "img": "img/241_pabikori.png"}, {"no": 242, "dex": 355, "name": "해골몽", "types": ["고스트"], "flavor": "쓴맛", "specs": ["분류"], "img": "img/242_haegolmong.png"}, {"no": 243, "dex": 356, "name": "미라몽", "types": ["고스트"], "flavor": "신맛", "specs": ["분류"], "img": "img/243_miramong.png"}, {"no": 244, "dex": 477, "name": "야느와르몽", "types": ["고스트"], "flavor": "쓴맛", "specs": ["분류", "거래"], "img": "img/244_yaneuwareumong.png"}, {"no": 245, "dex": 374, "name": "메탕", "types": ["강철", "에스퍼"], "flavor": "신맛", "specs": ["리사이클"], "img": "img/245_metang.png"}, {"no": 246, "dex": 375, "name": "메탕구", "types": ["강철", "에스퍼"], "flavor": "쓴맛", "specs": ["리사이클"], "img": "img/246_metanggu.png"}, {"no": 247, "dex": 376, "name": "메타그로스", "types": ["강철", "에스퍼"], "flavor": "떫은맛", "specs": ["리사이클", "분쇄"], "img": "img/247_metageuroseu.png"}, {"no": 248, "dex": 495, "name": "주리비얀", "types": ["풀"], "flavor": "신맛", "specs": ["재배", "어지르기"], "img": "img/248_juribiyan.png"}, {"no": 249, "dex": 496, "name": "샤비", "types": ["풀"], "flavor": "쓴맛", "specs": ["재배", "어지르기"], "img": "img/249_syabi.png"}, {"no": 250, "dex": 497, "name": "샤로다", "types": ["풀"], "flavor": "떫은맛", "specs": ["재배", "어지르기"], "img": "img/250_syaroda.png"}, {"no": 251, "dex": 656, "name": "개구마르", "types": ["물"], "flavor": "매운맛", "specs": ["급수"], "img": "img/251_gaegumareu.png"}, {"no": 252, "dex": 657, "name": "개굴반장", "types": ["물"], "flavor": "매운맛", "specs": ["급수"], "img": "img/252_gaegulbanjang.png"}, {"no": 253, "dex": 658, "name": "개굴닌자", "types": ["물", "악"], "flavor": "쓴맛", "specs": ["급수", "절삭"], "img": "img/253_gaegulninja.png"}, {"no": 254, "dex": 702, "name": "데덴네", "types": ["전기", "페어리"], "flavor": "단맛", "specs": ["탐색"], "img": "img/254_dedenne.png"}, {"no": 255, "dex": 714, "name": "음뱃", "types": ["비행", "드래곤"], "flavor": "매운맛", "specs": ["탐색"], "img": "img/255_eumbaet.png"}, {"no": 256, "dex": 715, "name": "음번", "types": ["비행", "드래곤"], "flavor": "떫은맛", "specs": ["탐색", "공중날기"], "img": "img/256_eumbeon.png"}, {"no": 257, "dex": 821, "name": "파라꼬", "types": ["비행"], "flavor": "신맛", "specs": ["절삭"], "img": "img/257_parakko.png"}, {"no": 258, "dex": 822, "name": "파크로우", "types": ["비행"], "flavor": "떫은맛", "specs": ["절삭"], "img": "img/258_pakeurou.png"}, {"no": 259, "dex": 823, "name": "아머까오", "types": ["비행", "강철"], "flavor": "쓴맛", "specs": ["절삭", "공중날기"], "img": "img/259_ameokkao.png"}, {"no": 260, "dex": 885, "name": "드라꼰", "types": ["드래곤", "고스트"], "flavor": "매운맛", "specs": ["분류", "탐색"], "img": "img/260_deurakkon.png"}, {"no": 261, "dex": 886, "name": "드래런치", "types": ["드래곤", "고스트"], "flavor": "단맛", "specs": ["분류", "탐색"], "img": "img/261_deuraereonchi.png"}, {"no": 262, "dex": 887, "name": "드래펄트", "types": ["드래곤", "고스트"], "flavor": "매운맛", "specs": ["분류", "거래"], "img": "img/262_deuraepeolteu.png"}, {"no": 263, "dex": 906, "name": "나오하", "types": ["풀"], "flavor": "단맛", "specs": ["재배"], "img": "img/263_naoha.png"}, {"no": 264, "dex": 907, "name": "나로테", "types": ["풀"], "flavor": "신맛", "specs": ["재배"], "img": "img/264_narote.png"}, {"no": 265, "dex": 908, "name": "마스카나", "types": ["풀", "악"], "flavor": "떫은맛", "specs": ["재배", "분위기 메이킹"], "img": "img/265_maseukana.png"}, {"no": 266, "dex": 940, "name": "찌리비", "types": ["전기", "비행"], "flavor": "매운맛", "specs": ["발전"], "img": "img/266_jjiribi.png"}, {"no": 267, "dex": 941, "name": "찌리비크", "types": ["전기", "비행"], "flavor": "떫은맛", "specs": ["발전", "공중날기"], "img": "img/267_jjiribikeu.png"}, {"no": 268, "dex": 957, "name": "어리짱", "types": ["페어리", "강철"], "flavor": "단맛", "specs": ["건축"], "img": "img/268_eorijjang.png"}, {"no": 269, "dex": 958, "name": "벼리짱", "types": ["페어리", "강철"], "flavor": "신맛", "specs": ["건축"], "img": "img/269_byeorijjang.png"}, {"no": 270, "dex": 959, "name": "두드리짱(거장)", "types": ["페어리", "강철"], "flavor": "매운맛", "specs": ["장인"], "img": "img/270_dudeurijjang_geojang.png"}, {"no": 271, "dex": 142, "name": "프테라", "types": ["바위", "비행"], "flavor": "신맛", "specs": ["공중날기"], "img": "img/271_peutera.png"}, {"no": 272, "dex": 408, "name": "두개도스", "types": ["바위"], "flavor": "매운맛", "specs": ["분쇄"], "img": "img/272_dugaedoseu.png"}, {"no": 273, "dex": 409, "name": "램펄드", "types": ["바위"], "flavor": "떫은맛", "specs": ["분쇄", "어지르기"], "img": "img/273_raempeoldeu.png"}, {"no": 274, "dex": 410, "name": "방패톱스", "types": ["바위", "강철"], "flavor": "단맛", "specs": ["분쇄"], "img": "img/274_bangpaetopseu.png"}, {"no": 275, "dex": 411, "name": "바리톱스", "types": ["바위", "강철"], "flavor": "쓴맛", "specs": ["분쇄", "어지르기"], "img": "img/275_baritopseu.png"}, {"no": 276, "dex": 696, "name": "티고라스", "types": ["바위", "드래곤"], "flavor": "단맛", "specs": ["분쇄"], "img": "img/276_tigoraseu.png"}, {"no": 277, "dex": 697, "name": "견고라스", "types": ["바위", "드래곤"], "flavor": "신맛", "specs": ["분쇄", "어지르기"], "img": "img/277_gyeongoraseu.png"}, {"no": 278, "dex": 698, "name": "아마루스", "types": ["바위", "얼음"], "flavor": "떫은맛", "specs": ["분쇄"], "img": "img/278_amaruseu.png"}, {"no": 279, "dex": 699, "name": "아마루르가", "types": ["바위", "얼음"], "flavor": "신맛", "specs": ["분쇄", "어지르기"], "img": "img/279_amarureuga.png"}, {"no": 280, "dex": 133, "name": "이브이", "types": ["노말"], "flavor": "단맛", "specs": ["거래"], "img": "img/280_ibeui.png"}, {"no": 281, "dex": 134, "name": "샤미드", "types": ["물"], "flavor": "단맛", "specs": ["급수"], "img": "img/281_syamideu.png"}, {"no": 282, "dex": 135, "name": "쥬피썬더", "types": ["전기"], "flavor": "매운맛", "specs": ["발전"], "img": "img/282_jyupisseondeo.png"}, {"no": 283, "dex": 136, "name": "부스터", "types": ["불꽃"], "flavor": "매운맛", "specs": ["점화"], "img": "img/283_buseuteo.png"}, {"no": 284, "dex": 196, "name": "에브이", "types": ["에스퍼"], "flavor": "단맛", "specs": ["분류"], "img": "img/284_ebeui.png"}, {"no": 285, "dex": 197, "name": "블래키", "types": ["악"], "flavor": "쓴맛", "specs": ["탐색"], "img": "img/285_beulraeki.png"}, {"no": 286, "dex": 470, "name": "리피아", "types": ["풀"], "flavor": "신맛", "specs": ["재배"], "img": "img/286_ripia.png"}, {"no": 287, "dex": 471, "name": "글레이시아", "types": ["얼음"], "flavor": "단맛", "specs": ["거래"], "img": "img/287_geulreisia.png"}, {"no": 288, "dex": 700, "name": "님피아", "types": ["페어리"], "flavor": "단맛", "specs": ["분위기 메이킹"], "img": "img/288_nimpia.png"}, {"no": 289, "dex": 382, "name": "가이오가", "types": ["물"], "flavor": "떫은맛", "specs": ["불명"], "img": "img/289_gaioga.png"}, {"no": 290, "dex": 243, "name": "라이코", "types": ["전기"], "flavor": "떫은맛", "specs": ["발전"], "img": "img/290_raiko.png"}, {"no": 291, "dex": 244, "name": "앤테이", "types": ["불꽃"], "flavor": "쓴맛", "specs": ["점화"], "img": "img/291_aentei.png"}, {"no": 292, "dex": 245, "name": "스이쿤", "types": ["물"], "flavor": "신맛", "specs": ["급수"], "img": "img/292_seuikun.png"}, {"no": 293, "dex": 721, "name": "볼케니온", "types": ["불꽃", "물"], "flavor": "매운맛", "specs": ["점화"], "img": "img/293_bolkenion.png"}, {"no": 294, "dex": 144, "name": "프리저", "types": ["얼음", "비행"], "flavor": "신맛", "specs": ["공중날기"], "img": "img/294_peurijeo.png"}, {"no": 295, "dex": 145, "name": "썬더", "types": ["전기", "비행"], "flavor": "매운맛", "specs": ["공중날기"], "img": "img/295_sseondeo.png"}, {"no": 296, "dex": 146, "name": "파이어", "types": ["불꽃", "비행"], "flavor": "매운맛", "specs": ["공중날기"], "img": "img/296_paieo.png"}, {"no": 297, "dex": 249, "name": "루기아", "types": ["에스퍼", "비행"], "flavor": "떫은맛", "specs": ["불명"], "img": "img/297_rugia.png"}, {"no": 298, "dex": 250, "name": "칠색조", "types": ["불꽃", "비행"], "flavor": "매운맛", "specs": ["불명"], "img": "img/298_chilsaekjo.png"}, {"no": 299, "dex": 150, "name": "뮤츠", "types": ["에스퍼"], "flavor": "떫은맛", "specs": ["순간이동"], "img": "img/299_myucheu.png"}, {"no": 300, "dex": 151, "name": "뮤", "types": ["에스퍼"], "flavor": "단맛", "specs": ["순간이동"], "img": "img/300_myu.png"}, {"no": "E001", "dex": 9001, "name": "통통코", "types": ["풀", "비행"], "flavor": "단맛", "specs": ["재배"], "img": "img/E001_tongtongko.png"}, {"no": "E002", "dex": 9002, "name": "두코", "types": ["풀", "비행"], "flavor": "떫은맛", "specs": ["재배"], "img": "img/E002_duko.png"}, {"no": "E003", "dex": 9003, "name": "솜솜코", "types": ["풀", "비행"], "flavor": "신맛", "specs": ["재배", "어지르기"], "img": "img/E003_somsomko.png"}, {"no": "E004", "dex": 9004, "name": "깜까미", "types": ["악", "고스트"], "flavor": "신맛", "specs": ["탐색"], "img": "img/E004_kkamkkami.png"}, {"no": "E005", "dex": 385, "name": "지라치", "types": ["강철", "에스퍼"], "flavor": "단맛", "specs": ["어지르기"], "img": "img/E005_jirachi.png"}], RECIPES=[{"icon": "img/recipe_peulrein_saelreodeu.png", "name": "플레인 샐러드", "flavor": "없음", "ings": ["잎사귀"]}, {"icon": "img/recipe_gwasa_saelreodeu.png", "name": "과사 샐러드", "flavor": "단맛", "ings": ["잎사귀", "과사열매"]}, {"icon": "img/recipe_haecho_saelreodeu.png", "name": "해초 샐러드", "flavor": "쓴맛", "ings": ["잎사귀", "해초"]}, {"icon": "img/recipe_kaljil_saelreodeu.png", "name": "칼질 샐러드", "flavor": "신맛", "ings": ["잎사귀"], "req": "절삭"}, {"icon": "img/recipe_bunswae_saelreodeu.png", "name": "분쇄 샐러드", "flavor": "떫은맛", "ings": ["잎사귀", "유루열매"], "req": "분쇄"}, {"icon": "img/recipe_keurutong_saelreodeu.png", "name": "크루통 샐러드", "flavor": "매운맛", "ings": ["잎사귀", "아무 빵"]}, {"icon": "img/recipe_peulrein_supeu.png", "name": "플레인 수프", "flavor": "없음", "ings": ["맛있는물"]}, {"icon": "img/recipe_haecho_supeu.png", "name": "해초 수프", "flavor": "쓴맛", "ings": ["맛있는물", "해초"]}, {"icon": "img/recipe_beoseot_supeu.png", "name": "버섯 수프", "flavor": "떫은맛", "ings": ["맛있는물", "먹음직한 버섯"]}, {"icon": "img/recipe_jjiritjjirit_supeu.png", "name": "찌릿찌릿 수프", "flavor": "매운맛", "ings": ["맛있는물"], "req": "발전"}, {"icon": "img/recipe_hanbang_supeu.png", "name": "한방 수프", "flavor": "매운맛", "ings": ["맛있는물", "콩", "잎사귀"]}, {"icon": "img/recipe_jyusi_supeu.png", "name": "쥬시 수프", "flavor": "신맛", "ings": ["맛있는물", "배리열매", "아무 햄버그"]}, {"icon": "img/recipe_peulrein_ppang.png", "name": "플레인 빵", "flavor": "없음", "ings": ["밀"]}, {"icon": "img/recipe_gwasa_ppang.png", "name": "과사 빵", "flavor": "신맛", "ings": ["밀", "과사열매"]}, {"icon": "img/recipe_danggeun_ppang.png", "name": "당근 빵", "flavor": "매운맛", "ings": ["밀", "먹음직한 당근"]}, {"icon": "img/recipe_rimeikeu_ppang.png", "name": "리메이크 빵", "flavor": "쓴맛", "ings": ["밀", "아무 빵"], "req": "리사이클"}, {"icon": "img/recipe_poksinpoksin_ppang.png", "name": "폭신폭신 빵", "flavor": "단맛", "ings": ["밀", "복슝열매"], "req": "급수"}, {"icon": "img/recipe_hukkeunhukkeun_supeu_ppang.png", "name": "후끈후끈 수프 빵", "flavor": "매운맛", "ings": ["밀", "아무 수프"], "req": "점화"}, {"icon": "img/recipe_peulrein_haembeogeu.png", "name": "플레인 햄버그", "flavor": "없음", "ings": ["콩"]}, {"icon": "img/recipe_beoseot_haembeogeu.png", "name": "버섯 햄버그", "flavor": "떫은맛", "ings": ["콩", "먹음직한 버섯"]}, {"icon": "img/recipe_tomato_haembeogeu.png", "name": "토마토 햄버그", "flavor": "신맛", "ings": ["콩", "토마토"]}, {"icon": "img/recipe_gamja_haembeogeu.png", "name": "감자 햄버그", "flavor": "단맛", "ings": ["콩", "감자"]}, {"icon": "img/recipe_eoreunui_haembeogeu.png", "name": "어른의 햄버그", "flavor": "쓴맛", "ings": ["콩", "복분열매", "리샘열매"]}, {"icon": "img/recipe_dachaeroun_haembeogeu.png", "name": "다채로운 햄버그", "flavor": "없음", "ings": ["콩", "감자", "아무 샐러드"]}];
@@ -82,7 +138,10 @@ const RCATS=['샐러드','수프','빵','햄버그'];const catOf=r=>RCATS.find(c
 const HOME=d=>`https://cdn.jsdelivr.net/gh/PokeAPI/sprites@master/sprites/pokemon/other/home/${d}.png`;
 const TICON=k=>`img/type_${TYPE_EN[k]}.png`;
 const SICON=k=>SPEC_ICON[k.replace(/\s/g,'')];
-let view='grid', cat=null, val=null, q='', chipsOpen=true, rcat=null;
+let view='grid', q='', rcat=null, rflavor=null;
+const RFLAVORS=['맛 없음','떫은맛','쓴맛','신맛','단맛','매운맛'];
+const rflavorVal=label=>label==='맛 없음'?'없음':label;
+let selType=new Set(), selSpec=new Set(), selFlavor=new Set();
 const uniq=a=>[...new Set(a)];
 function valuesFor(c){
   if(c==='type')return Object.keys(TYPE_COLORS).filter(t=>DATA.some(p=>p.types.includes(t)));
@@ -91,64 +150,224 @@ function valuesFor(c){
   return [];
 }
 function iconFor(c,v){return c==='type'?TICON(v):c==='flavor'?FLAVOR_ICON[v]:c==='spec'?SICON(v):null;}
+function selSetFor(ck){return ck==='type'?selType:ck==='spec'?selSpec:selFlavor;}
 function pmatch(p){
   if(q&&!p.name.includes(q))return false;
-  if(!cat||!val)return true;
-  if(cat==='type')return p.types.includes(val);
-  if(cat==='flavor')return p.flavor===val;
-  if(cat==='spec')return p.specs.includes(val);
+  if(selType.size&&!p.types.some(t=>selType.has(t)))return false;
+  if(selSpec.size&&!p.specs.some(s=>selSpec.has(s)))return false;
+  if(selFlavor.size&&!selFlavor.has(p.flavor))return false;
   return true;
 }
-function renderChips(){
-  const box=document.getElementById('chips');const tg=document.getElementById('toggle');
-  if(view==='recipe'){tg.style.display='block';tg.textContent=chipsOpen?'접기':'열기';box.style.display=chipsOpen?'flex':'none';box.innerHTML='';RCATS.forEach(v=>{const b=document.createElement('button');b.className='chip'+(v===rcat?' active':'');if(RCAT_ICON[v]){const im=document.createElement('img');im.referrerPolicy='no-referrer';im.src=RCAT_ICON[v];b.appendChild(im);}b.appendChild(document.createTextNode(v));b.onclick=()=>{rcat=(rcat===v?null:v);renderChips();renderMain();};box.appendChild(b);});return;}
-  if(view!=='grid'||!cat){box.style.display='none';tg.style.display='none';return;}
-  tg.style.display='block';tg.textContent=chipsOpen?'접기':'열기';
-  box.style.display=chipsOpen?'flex':'none';box.innerHTML='';
-  valuesFor(cat).forEach(v=>{
-    const b=document.createElement('button');b.className='chip'+(v===val?' active':'');
-    const ic=iconFor(cat,v);
-    if(ic){const im=document.createElement('img');im.referrerPolicy='no-referrer';im.src=ic;im.onerror=()=>im.remove();b.appendChild(im);}
-    b.appendChild(document.createTextNode(v));
-    const col=cat==='type'?TYPE_COLORS[v]:cat==='flavor'?FLAVOR_COLORS[v]:null;
-    if(col){b.style.background=col;b.style.color='#1a1a1a';}
-    b.onclick=()=>{val=(val===v?null:v);renderChips();renderMain();};
-    box.appendChild(b);
+function chipBtn(label,active,icon,bgColor,onClick){
+  const b=document.createElement('button');
+  b.className='chip'+(active?' active':'');
+  if(icon){const im=document.createElement('img');im.referrerPolicy='no-referrer';im.src=icon;im.onerror=()=>im.remove();b.appendChild(im);}
+  b.appendChild(document.createTextNode(label));
+  if(bgColor){b.style.background=bgColor;b.style.color='#1a1a1a';}
+  b.onclick=onClick;
+  return b;
+}
+function buildMenu(){
+  ['type','spec','flavor'].forEach(ck=>{
+    const box=document.getElementById('chips-'+ck);box.innerHTML='';
+    const sel=selSetFor(ck);
+    box.appendChild(chipBtn('전부',sel.size===0,null,null,()=>{
+      sel.clear();view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
+    }));
+    valuesFor(ck).forEach(v=>{
+      const active=sel.has(v);
+      box.appendChild(chipBtn(v,active,iconFor(ck,v),null,()=>{
+        if(sel.has(v)){sel.delete(v);}else{sel.add(v);}
+        view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
+      }));
+    });
+  });
+  const rbox=document.getElementById('chips-recipe');rbox.innerHTML='';
+  ['전부',...RCATS].forEach(v=>{
+    const active=view==='recipe'&&(v==='전부'?(rcat===null&&rflavor===null):rcat===v);
+    rbox.appendChild(chipBtn(v,active,v==='전부'?null:RCAT_ICON[v],null,()=>{
+      if(v==='전부'){rcat=null;rflavor=null;}else{rcat=(rcat===v?null:v);}
+      view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
+    }));
+  });
+  RFLAVORS.forEach(label=>{
+    const fv=rflavorVal(label);
+    const active=view==='recipe'&&rflavor===fv;
+    rbox.appendChild(chipBtn(label,active,label==='맛 없음'?null:FLAVOR_ICON[label],null,()=>{
+      rflavor=(rflavor===fv?null:fv);
+      view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
+    }));
   });
 }
 function imgFail(el){const s=+el.dataset.step||0;el.dataset.step=s+1;if(s===0&&el.dataset.alt){el.src=el.dataset.alt;}else{el.style.opacity=.25;}}
 function renderMain(){
-  const g=document.getElementById('main');const c=document.getElementById('count');
+  const g=document.getElementById('main');
   if(view==='recipe'){
-    const list=RECIPES.filter(r=>(!rcat||catOf(r)===rcat)&&(!q||r.name.includes(q)||r.ings.some(i=>i.includes(q))));
-    c.textContent=list.length+'개 레시피';
+    const list=RECIPES.filter(r=>(!rcat||catOf(r)===rcat)&&(!rflavor||r.flavor===rflavor)&&(!q||r.name.includes(q)||r.ings.some(i=>i.includes(q))));
     g.className='rlist';
     g.innerHTML=list.length?list.map(r=>`<div class="rrow"><img class="ricon" loading="lazy" referrerpolicy="no-referrer" src="${r.icon}" ${r.fb?`data-fb="${r.fb}"`:''} onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}" alt="${r.name}"><div class="rinfo"><span class="k">이름</span><span class="v">${r.name}</span><span class="k">맛</span><span class="v">${r.flavor==='없음'?'없음':`<img class="fi" referrerpolicy="no-referrer" src="${FLAVOR_ICON[r.flavor]}">`+r.flavor}</span><span class="k">재료</span><span class="v">${r.ings.map(i=>`<span class="ing">${ING_ICON[i]?`<img referrerpolicy="no-referrer" src="${ING_ICON[i]}">`:''}${i}</span>`).join('<span class="plus">+</span>')}${r.req?`<span class="req">${SICON(r.req)?`<img referrerpolicy="no-referrer" src="${SICON(r.req)}">`:''}${r.req}</span>`:''}</span></div></div>`).join(''):'<div class="empty">검색 결과가 없어요</div>';
     return;
   }
   const list=DATA.filter(pmatch);
-  c.textContent=list.length+'마리';
   g.className='grid';
   g.innerHTML=list.length?list.map(p=>{
     const src=p.img||HOME(p.dex);const alt=p.img?` data-alt="${HOME(p.dex)}"`:'';
     const tic=p.types.map(t=>`<img referrerpolicy="no-referrer" src="${TICON(t)}" title="${t}">`).join('');
     const sic=p.specs.map(s=>SICON(s)?`<img referrerpolicy="no-referrer" src="${SICON(s)}" title="${s}">`:'').join('');
     const fic=(p.name!=='메타몽'&&FLAVOR_ICON[p.flavor])?`<img referrerpolicy="no-referrer" src="${FLAVOR_ICON[p.flavor]}" title="${p.flavor}">`:'';
-    return `<div class="card"><span class="no">${/^E/.test(String(p.no))?p.no:String(p.no).padStart(3,'0')}</span><span class="badges">${[tic,sic,fic].filter(Boolean).join('<span class="sep"></span>')}</span><img class="sp" loading="lazy" referrerpolicy="no-referrer" data-dex="${p.dex}"${alt} src="${src}" alt="${p.name}" onerror="imgFail(this)"><span class="nm">${p.name}</span></div>`;
+    const liked=LIKED.has(String(p.no))?' liked':'';
+    return `<div class="card"><span class="no">${/^E/.test(String(p.no))?p.no:String(p.no).padStart(3,'0')}</span><span class="heart${liked}" data-no="${p.no}"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span class="badges">${[tic,sic,fic].filter(Boolean).join('<span class="sep"></span>')}</span><img class="sp" loading="lazy" referrerpolicy="no-referrer" data-dex="${p.dex}"${alt} src="${src}" alt="${p.name}" onerror="imgFail(this)"><span class="nm">${p.name}</span></div>`;
   }).join(''):'<div class="empty">검색 결과가 없어요</div>';
 }
-document.querySelectorAll('.cat').forEach(btn=>{btn.onclick=()=>{
-  document.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  const c=btn.dataset.c;
-  if(c==='recipe'){view='recipe';cat=null;val=null;rcat=null;}else{view='grid';cat=c;val=null;}chipsOpen=true;
-  renderChips();renderMain();window.scrollTo({top:0,behavior:'smooth'});
-};});
-document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim();renderMain();});
-function goHome(){view='grid';cat=null;val=null;rcat=null;q='';var qi=document.getElementById('q');if(qi)qi.value='';document.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));renderChips();renderMain();window.scrollTo({top:0,behavior:'smooth'});}
+function hideSuggest(){const b=document.getElementById('suggestBox');b.classList.remove('open');b.innerHTML='';}
+function updateSuggest(){
+  const box=document.getElementById('suggestBox');
+  if(!q){hideSuggest();return;}
+  const pool=view==='recipe'?uniq(RECIPES.map(r=>r.name)):uniq(DATA.map(p=>p.name));
+  const matches=pool.filter(n=>n.includes(q)).slice(0,8);
+  if(!matches.length){hideSuggest();return;}
+  box.innerHTML='';
+  matches.forEach(n=>{
+    const d=document.createElement('div');d.className='sitem';d.textContent=n;
+    d.onmousedown=(e)=>{e.preventDefault();q=n;document.getElementById('q').value=n;hideSuggest();renderMain();};
+    box.appendChild(d);
+  });
+  box.classList.add('open');
+}
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim();renderMain();updateSuggest();});
+document.addEventListener('click',e=>{if(!e.target.closest('.searchwrap'))hideSuggest();});
+function goHome(){view='grid';selType.clear();selSpec.clear();selFlavor.clear();rcat=null;rflavor=null;q='';var qi=document.getElementById('q');if(qi)qi.value='';hideSuggest();buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});}
 document.getElementById('hlogo').onclick=goHome;document.getElementById('htitle').onclick=goHome;
-document.getElementById('toggle').onclick=()=>{chipsOpen=!chipsOpen;renderChips();};
-document.getElementById('qclear').onclick=()=>{q='';document.getElementById('q').value='';renderMain();};
-renderChips();renderMain();
+document.getElementById('qclear').onclick=()=>{q='';document.getElementById('q').value='';renderMain();hideSuggest();};
+
+function openMenu(){document.getElementById('menuOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menuOverlay').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('menubtn').onclick=openMenu;
+document.getElementById('mclose').onclick=closeMenu;
+document.getElementById('menuOverlay').addEventListener('click',e=>{if(e.target.id==='menuOverlay')closeMenu();});
+document.querySelectorAll('.msec h3').forEach(h=>{h.onclick=()=>{h.parentElement.classList.toggle('collapsed');};});
+
+// ---- Firebase: todayspokemon과 동일 프로젝트/계정 체계 공유 ----
+var FIREBASE_CONFIG={apiKey:"AIzaSyA1qlkS_vNnAEMhyeJxH0EHRxYrFeJXZDk",authDomain:"todayspokemon-ef9c0.firebaseapp.com",projectId:"todayspokemon-ef9c0",storageBucket:"todayspokemon-ef9c0.firebasestorage.app",messagingSenderId:"69457831977",appId:"1:69457831977:web:faeee4ba343a6c9b931438"};
+var fbAuth=null, db=null;
+try{
+  firebase.initializeApp(FIREBASE_CONFIG);
+  fbAuth=firebase.auth();
+  db=firebase.firestore();
+}catch(e){console.error('Firebase 초기화 실패',e);}
+
+// 아이디 <-> 가짜 이메일 변환 (todayspokemon의 idToEmail과 완전히 동일한 규칙)
+function idToEmail(id){
+  var hex="",bytes=unescape(encodeURIComponent(id));
+  for(var i=0;i<bytes.length;i++){var h=bytes.charCodeAt(i).toString(16);hex+=(h.length<2?"0":"")+h;}
+  return "u"+hex+"@todayspokemon.app";
+}
+function emailToId(email){
+  try{
+    var hex=email.slice(1,email.indexOf('@'));
+    var bytes="";
+    for(var i=0;i<hex.length;i+=2){bytes+=String.fromCharCode(parseInt(hex.substr(i,2),16));}
+    return decodeURIComponent(escape(bytes));
+  }catch(e){return email;}
+}
+
+let CUR_USER=null;
+function likeKey(){return 'pokopia_likes_'+(CUR_USER||'guest');}
+let LIKED=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+function saveLikesLocal(){localStorage.setItem(likeKey(),JSON.stringify([...LIKED]));}
+function saveLikesRemote(uid){
+  if(!db||!uid)return;
+  db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+    .catch(function(e){console.error('하트 저장 실패(Firestore 규칙 확인 필요)',e);});
+}
+function saveLikes(){
+  saveLikesLocal();
+  if(fbAuth&&fbAuth.currentUser)saveLikesRemote(fbAuth.currentUser.uid);
+}
+document.getElementById('main').addEventListener('click',e=>{
+  const h=e.target.closest('.heart');
+  if(!h)return;
+  e.stopPropagation();
+  const no=h.dataset.no;
+  if(LIKED.has(no)){LIKED.delete(no);h.classList.remove('liked');}else{LIKED.add(no);h.classList.add('liked');}
+  saveLikes();
+});
+
+function updateAuthUI(){
+  document.getElementById('loginBtn').textContent=CUR_USER?'로그아웃':'로그인';
+  const g=document.getElementById('mgreet');
+  if(CUR_USER){g.textContent=CUR_USER+'님, 안녕하세요.';g.classList.add('show');}
+  else{g.textContent='';g.classList.remove('show');}
+}
+function openLogin(){document.getElementById('loginMsg').textContent='';document.getElementById('loginId').value='';document.getElementById('loginPw').value='';document.getElementById('loginModal').classList.add('open');}
+function closeLogin(){document.getElementById('loginModal').classList.remove('open');}
+document.getElementById('loginCancel').onclick=closeLogin;
+document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin();});
+document.getElementById('loginBtn').onclick=()=>{
+  if(CUR_USER){
+    if(fbAuth)fbAuth.signOut();
+    return;
+  }
+  openLogin();
+};
+function mergeGuestLikesInto(uid){
+  return db.collection('pokopiaLikes').doc(uid).get().then(function(doc){
+    const remote=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
+    LIKED.forEach(x=>remote.add(x));
+    LIKED=remote;
+    return db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  });
+}
+document.getElementById('loginSubmit').onclick=()=>{
+  const id=document.getElementById('loginId').value.trim();
+  const pw=document.getElementById('loginPw').value;
+  const msg=document.getElementById('loginMsg');
+  const btn=document.getElementById('loginSubmit');
+  if(!id||!pw){msg.textContent='아이디와 비밀번호를 입력해주세요.';return;}
+  if(!fbAuth){msg.textContent='서버 연결이 안 돼 로그인할 수 없습니다.';return;}
+  if(pw.length<6){msg.textContent='비밀번호는 6자 이상이어야 합니다.';return;}
+  const email=idToEmail(id);
+  if(email.length>80){msg.textContent='아이디가 너무 깁니다.';return;}
+  msg.textContent='';btn.disabled=true;btn.textContent='로그인 중…';
+  fbAuth.createUserWithEmailAndPassword(email,pw)
+    .catch(function(err){
+      if(err&&err.code==='auth/email-already-in-use')return fbAuth.signInWithEmailAndPassword(email,pw);
+      throw err;
+    })
+    .then(function(cred){return mergeGuestLikesInto(cred.user.uid);})
+    .then(function(){
+      btn.disabled=false;btn.textContent='로그인';
+      closeLogin();closeMenu();
+    })
+    .catch(function(err){
+      btn.disabled=false;btn.textContent='로그인';
+      const code=err&&err.code;
+      if(code==='auth/wrong-password'||code==='auth/invalid-credential'||code==='auth/invalid-login-credentials'){msg.textContent='비밀번호가 일치하지 않아요.';}
+      else if(code==='auth/invalid-email'){msg.textContent='아이디 형식이 올바르지 않아요.';}
+      else if(code==='auth/network-request-failed'){msg.textContent='네트워크 연결을 확인해주세요.';}
+      else if(code==='auth/too-many-requests'){msg.textContent='시도가 너무 많아요. 잠시 후 다시 시도해주세요.';}
+      else{msg.textContent='로그인에 실패했어요. 다시 시도해주세요.';console.error(err);}
+    });
+};
+
+if(fbAuth){
+  fbAuth.onAuthStateChanged(function(user){
+    if(user){
+      CUR_USER=emailToId(user.email);
+      db.collection('pokopiaLikes').doc(user.uid).get().then(function(doc){
+        LIKED=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
+        updateAuthUI();renderMain();
+      }).catch(function(e){console.error('하트 불러오기 실패',e);updateAuthUI();renderMain();});
+    }else{
+      CUR_USER=null;
+      LIKED=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+      updateAuthUI();renderMain();
+    }
+  });
+}
+
+updateAuthUI();
+buildMenu();renderMain();
 </script>
 </body>
 </html>
