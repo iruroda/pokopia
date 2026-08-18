@@ -175,7 +175,7 @@ function buildMenu(){
   ['type','spec','flavor'].forEach(ck=>{
     const box=document.getElementById('chips-'+ck);box.innerHTML='';
     const sel=selSetFor(ck);
-    box.appendChild(chipBtn('전부',(sel.size===0&&view==='grid')?'view':null,null,null,()=>{
+    box.appendChild(chipBtn('전부',sel.size===0?(view==='grid'?'view':'other'):null,null,null,()=>{
       sel.clear();view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
     }));
     valuesFor(ck).forEach(v=>{
@@ -189,7 +189,7 @@ function buildMenu(){
   const rbox=document.getElementById('chips-recipe');rbox.innerHTML='';
   ['전부',...RCATS].forEach(v=>{
     const isSel=v==='전부'?(rcat===null&&rflavor===null):rcat===v;
-    const state=v==='전부'?(isSel&&view==='recipe'?'view':null):(isSel?(view==='recipe'?'view':'other'):null);
+    const state=isSel?(view==='recipe'?'view':'other'):null;
     rbox.appendChild(chipBtn(v,state,v==='전부'?null:RCAT_ICON[v],null,()=>{
       if(v==='전부'){rcat=null;rflavor=null;}else{rcat=(rcat===v?null:v);}
       view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
