@@ -32,6 +32,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .chip{flex:0 0 auto;display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:999px;background:var(--card2);color:var(--txt);font-size:12.5px;font-weight:600;border:1.5px solid transparent;cursor:pointer;white-space:nowrap;}
 .chip img{width:16px;height:16px;object-fit:contain;}
 .chip.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(147,51,234,.18) inset;}
+.chip.active-view{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:none;}
 .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 14px 44px;}
 .card{position:relative;aspect-ratio:1/1;background:var(--card);border-radius:13px;display:flex;flex-direction:column;align-items:center;padding:5px 3px 4px;overflow:hidden;border:1px solid var(--border);}
 .card .no{position:absolute;top:3px;left:5px;font-size:8.5px;color:var(--sub);font-weight:700;z-index:2;}
@@ -45,6 +46,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .card img.sp{width:74%;height:54%;object-fit:contain;margin-top:44px;margin-right:6px;}
 .card .nm{font-size:10px;font-weight:700;line-height:1.15;text-align:center;margin-top:auto;word-break:keep-all;}
 .empty{text-align:center;color:var(--sub);padding:50px 20px;font-size:13px;}
+.grid .empty{grid-column:1/-1;}
 .rlist{display:flex;flex-direction:column;gap:8px;padding:12px 14px 44px;}
 .rrow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:13px;padding:10px 12px;}
 .rrow .ricon{width:62px;height:62px;flex:0 0 auto;object-fit:contain;}
@@ -75,7 +77,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .mdivider{height:1px;background:var(--border);margin:14px 0 0;flex:0 0 auto;}
 .mgreet{display:none;font-size:12.5px;color:var(--sub);text-align:left;margin-top:30px;}
 .mgreet.show{display:block;}
-.mfooter{margin-top:auto;padding-top:6px;display:flex;gap:8px;}
+.mfooter{padding-top:6px;display:flex;gap:8px;}
 .mbig{flex:1;text-align:center;background:var(--card2);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;}
 .modal{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:40;align-items:center;justify-content:center;padding:24px;}
 .modal.open{display:flex;}
@@ -95,7 +97,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 <header>
   <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
   <div class="searchwrap">
-    <input id="q" class="search" type="text" placeholder="이름·재료 검색" autocomplete="off">
+    <input id="q" class="search" type="text" placeholder="포켓몬 이름 검색" autocomplete="off">
     <button id="qclear" class="qclear" type="button">모두 지우기</button>
     <div id="suggestBox" class="suggest"></div>
   </div>
@@ -160,9 +162,9 @@ function pmatch(p){
   if(selFlavor.size&&!selFlavor.has(p.flavor))return false;
   return true;
 }
-function chipBtn(label,active,icon,bgColor,onClick){
+function chipBtn(label,state,icon,bgColor,onClick){
   const b=document.createElement('button');
-  b.className='chip'+(active?' active':'');
+  b.className='chip'+(state==='view'?' active-view':state==='other'?' active':'');
   if(icon){const im=document.createElement('img');im.referrerPolicy='no-referrer';im.src=icon;im.onerror=()=>im.remove();b.appendChild(im);}
   b.appendChild(document.createTextNode(label));
   if(bgColor){b.style.background=bgColor;b.style.color='#1a1a1a';}
@@ -173,12 +175,12 @@ function buildMenu(){
   ['type','spec','flavor'].forEach(ck=>{
     const box=document.getElementById('chips-'+ck);box.innerHTML='';
     const sel=selSetFor(ck);
-    box.appendChild(chipBtn('전부',sel.size===0,null,null,()=>{
+    box.appendChild(chipBtn('전부',(sel.size===0&&view==='grid')?'view':null,null,null,()=>{
       sel.clear();view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
     }));
     valuesFor(ck).forEach(v=>{
-      const active=sel.has(v);
-      box.appendChild(chipBtn(v,active,iconFor(ck,v),null,()=>{
+      const state=sel.has(v)?(view==='grid'?'view':'other'):null;
+      box.appendChild(chipBtn(v,state,iconFor(ck,v),null,()=>{
         if(sel.has(v)){sel.delete(v);}else{sel.add(v);}
         view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
       }));
@@ -186,28 +188,34 @@ function buildMenu(){
   });
   const rbox=document.getElementById('chips-recipe');rbox.innerHTML='';
   ['전부',...RCATS].forEach(v=>{
-    const active=view==='recipe'&&(v==='전부'?(rcat===null&&rflavor===null):rcat===v);
-    rbox.appendChild(chipBtn(v,active,v==='전부'?null:RCAT_ICON[v],null,()=>{
+    const isSel=v==='전부'?(rcat===null&&rflavor===null):rcat===v;
+    const state=v==='전부'?(isSel&&view==='recipe'?'view':null):(isSel?(view==='recipe'?'view':'other'):null);
+    rbox.appendChild(chipBtn(v,state,v==='전부'?null:RCAT_ICON[v],null,()=>{
       if(v==='전부'){rcat=null;rflavor=null;}else{rcat=(rcat===v?null:v);}
       view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
     }));
   });
   RFLAVORS.forEach(label=>{
     const fv=rflavorVal(label);
-    const active=view==='recipe'&&rflavor===fv;
-    rbox.appendChild(chipBtn(label,active,label==='맛 없음'?null:FLAVOR_ICON[label],null,()=>{
+    const state=rflavor===fv?(view==='recipe'?'view':'other'):null;
+    rbox.appendChild(chipBtn(label,state,label==='맛 없음'?null:FLAVOR_ICON[label],null,()=>{
       rflavor=(rflavor===fv?null:fv);
       view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
     }));
   });
 }
 function imgFail(el){const s=+el.dataset.step||0;el.dataset.step=s+1;if(s===0&&el.dataset.alt){el.src=el.dataset.alt;}else{el.style.opacity=.25;}}
+function updateSearchPlaceholder(){
+  const qi=document.getElementById('q');
+  if(qi)qi.placeholder=view==='recipe'?'음식 또는 재료 이름 검색':'포켓몬 이름 검색';
+}
 function renderMain(){
+  updateSearchPlaceholder();
   const g=document.getElementById('main');
   if(view==='recipe'){
     const list=RECIPES.filter(r=>(!rcat||catOf(r)===rcat)&&(!rflavor||r.flavor===rflavor)&&(!q||r.name.includes(q)||r.ings.some(i=>i.includes(q))));
     g.className='rlist';
-    g.innerHTML=list.length?list.map(r=>`<div class="rrow"><img class="ricon" loading="lazy" referrerpolicy="no-referrer" src="${r.icon}" ${r.fb?`data-fb="${r.fb}"`:''} onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}" alt="${r.name}"><div class="rinfo"><span class="k">이름</span><span class="v">${r.name}</span><span class="k">맛</span><span class="v">${r.flavor==='없음'?'없음':`<img class="fi" referrerpolicy="no-referrer" src="${FLAVOR_ICON[r.flavor]}">`+r.flavor}</span><span class="k">재료</span><span class="v">${r.ings.map(i=>`<span class="ing">${ING_ICON[i]?`<img referrerpolicy="no-referrer" src="${ING_ICON[i]}">`:''}${i}</span>`).join('<span class="plus">+</span>')}${r.req?`<span class="req">${SICON(r.req)?`<img referrerpolicy="no-referrer" src="${SICON(r.req)}">`:''}${r.req}</span>`:''}</span></div></div>`).join(''):'<div class="empty">검색 결과가 없어요</div>';
+    g.innerHTML=list.length?list.map(r=>`<div class="rrow"><img class="ricon" loading="lazy" referrerpolicy="no-referrer" src="${r.icon}" ${r.fb?`data-fb="${r.fb}"`:''} onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb');}" alt="${r.name}"><div class="rinfo"><span class="k">이름</span><span class="v">${r.name}</span><span class="k">맛</span><span class="v">${r.flavor==='없음'?'없음':`<img class="fi" referrerpolicy="no-referrer" src="${FLAVOR_ICON[r.flavor]}">`+r.flavor}</span><span class="k">재료</span><span class="v">${r.ings.map(i=>`<span class="ing">${ING_ICON[i]?`<img referrerpolicy="no-referrer" src="${ING_ICON[i]}">`:''}${i}</span>`).join('<span class="plus">+</span>')}${r.req?`<span class="req">${SICON(r.req)?`<img referrerpolicy="no-referrer" src="${SICON(r.req)}">`:''}${r.req}</span>`:''}</span></div></div>`).join(''):'<div class="empty">검색 결과가 없습니다.</div>';
     return;
   }
   const list=DATA.filter(pmatch);
@@ -219,7 +227,7 @@ function renderMain(){
     const fic=(p.name!=='메타몽'&&FLAVOR_ICON[p.flavor])?`<img referrerpolicy="no-referrer" src="${FLAVOR_ICON[p.flavor]}" title="${p.flavor}">`:'';
     const liked=LIKED.has(String(p.no))?' liked':'';
     return `<div class="card"><span class="no">${/^E/.test(String(p.no))?p.no:String(p.no).padStart(3,'0')}</span><span class="heart${liked}" data-no="${p.no}"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span class="badges">${[tic,sic,fic].filter(Boolean).join('<span class="sep"></span>')}</span><img class="sp" loading="lazy" referrerpolicy="no-referrer" data-dex="${p.dex}"${alt} src="${src}" alt="${p.name}" onerror="imgFail(this)"><span class="nm">${p.name}</span></div>`;
-  }).join(''):'<div class="empty">검색 결과가 없어요</div>';
+  }).join(''):'<div class="empty">검색 결과가 없습니다.</div>';
 }
 function hideSuggest(){const b=document.getElementById('suggestBox');b.classList.remove('open');b.innerHTML='';}
 function updateSuggest(){
