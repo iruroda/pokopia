@@ -4,8 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Pokémon Pokopia</title>
-<link rel="icon" type="image/png" href="img/monsterball.png">
-<link rel="apple-touch-icon" href="img/monsterball.png">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 
 <style>
 :root{--bg:#f3e8fd;--card:#ffffff;--card2:#f6eefd;--txt:#2c1f42;--sub:#8f7aa8;--accent:#af8dce;--border:#e6d6f7;--heart:#ffb0c8;--heart-empty:#c9b8dd;}
@@ -27,7 +26,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .search{width:100%;padding:9px 100px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;}
 .qclear{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:4px 12px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--txt);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
 .search::placeholder{color:#ab9cc9;}
-.suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(43,33,64,.15);max-height:220px;overflow-y:auto;z-index:25;display:none;}
+.suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(43,33,64,.15);max-height:108px;overflow-y:auto;z-index:25;display:none;}
 .suggest.open{display:block;}
 .suggest .sitem{padding:9px 12px;font-size:13px;cursor:pointer;color:var(--txt);}
 .suggest .sitem:hover{background:var(--card2);}
@@ -82,6 +81,7 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .msec h3 .lockbtn svg{width:100%;height:100%;display:block;}
 .msec h3 .lockbtn path,.msec h3 .lockbtn rect{fill:none;stroke:var(--sub);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
 .msec h3 .lockbtn.locked path,.msec h3 .lockbtn.locked rect{stroke:var(--accent);}
+.msec h3 .lockbtn.locked rect{fill:var(--accent);}
 body.affLock .card .heart{cursor:not-allowed;}
 .msec h3 .car{font-size:10px;color:var(--sub);transition:transform .2s;}
 .msec.collapsed h3{margin-bottom:0;}
@@ -171,7 +171,7 @@ const HEART_PATH='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5
 function heartChipIcon(filled){
   return {svg:`<svg viewBox="0 0 24 24"><path d="${HEART_PATH}" style="fill:${filled?'var(--heart)':'none'};stroke:${filled?'var(--heart)':'var(--heart-empty)'};stroke-width:1.3px"/></svg>`};
 }
-let affinityLocked=false;
+let affinityLocked=localStorage.getItem('pokopiaAffLock')==='1';
 function lockIconSVG(locked){
   const shackle=locked?'M8 11V7a4 4 0 1 1 8 0v4':'M8 11V7a4 4 0 1 1 8 0';
   return `<svg viewBox="0 0 24 24"><path d="${shackle}"/><rect x="5" y="11" width="14" height="9" rx="2"/></svg>`;
@@ -258,19 +258,19 @@ function buildMenu(){
     const state=isSel?(view==='recipe'?'view':'other'):null;
     rcbox.appendChild(chipBtn(v,state,v==='전부'?null:RCAT_ICON[v],null,()=>{
       rcat=(v==='전부')?null:(rcat===v?null:v);
-      view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
+      view='recipe';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
     }));
   });
   const rfbox=document.getElementById('chips-rflavor');rfbox.innerHTML='';
   rfbox.appendChild(chipBtn('전부',rflavor===null?(view==='recipe'?'view':'other'):null,null,null,()=>{
-    rflavor=null;view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
+    rflavor=null;view='recipe';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
   }));
   RFLAVORS.forEach(label=>{
     const fv=rflavorVal(label);
     const state=rflavor===fv?(view==='recipe'?'view':'other'):null;
     rfbox.appendChild(chipBtn(label,state,label==='맛 없음'?null:FLAVOR_ICON[label],null,()=>{
       rflavor=(rflavor===fv?null:fv);
-      view='recipe';buildMenu();renderMain();closeMenu();window.scrollTo({top:0,behavior:'smooth'});
+      view='recipe';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
     }));
   });
 }
@@ -335,7 +335,7 @@ document.getElementById('mclose').onclick=closeMenu;
 document.getElementById('menuOverlay').addEventListener('click',e=>{if(e.target.id==='menuOverlay')closeMenu();});
 document.querySelectorAll('.msec h3').forEach(h=>{h.onclick=()=>{h.parentElement.classList.toggle('collapsed');};});
 const affLockBtn=document.getElementById('affLockBtn');
-if(affLockBtn){affLockBtn.onclick=e=>{e.stopPropagation();affinityLocked=!affinityLocked;updateAffLockUI();};updateAffLockUI();}
+if(affLockBtn){affLockBtn.onclick=e=>{e.stopPropagation();affinityLocked=!affinityLocked;localStorage.setItem('pokopiaAffLock',affinityLocked?'1':'0');updateAffLockUI();};updateAffLockUI();}
 
 // ---- Firebase: todayspokemon과 동일 프로젝트/계정 체계 공유 ----
 var FIREBASE_CONFIG={apiKey:"AIzaSyA1qlkS_vNnAEMhyeJxH0EHRxYrFeJXZDk",authDomain:"todayspokemon-ef9c0.firebaseapp.com",projectId:"todayspokemon-ef9c0",storageBucket:"todayspokemon-ef9c0.firebasestorage.app",messagingSenderId:"69457831977",appId:"1:69457831977:web:faeee4ba343a6c9b931438"};
