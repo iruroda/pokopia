@@ -9,10 +9,21 @@
 <style>
 :root{--bg:#f3e8fd;--card:#ffffff;--card2:#f6eefd;--txt:#2c1f42;--sub:#8f7aa8;--accent:#af8dce;--border:#e6d6f7;--heart:#ffb0c8;--heart-empty:#c9b8dd;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html{overflow-y:scroll;overflow-x:hidden;}
+img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;}
+html{overflow-y:scroll;overflow-x:hidden;scrollbar-gutter:stable both-edges;}
+@media (hover:hover) and (pointer:fine){
+#mpanel{scrollbar-gutter:stable both-edges;}
+html::-webkit-scrollbar,#mpanel::-webkit-scrollbar{width:12px;height:12px;}
+html::-webkit-scrollbar-track,#mpanel::-webkit-scrollbar-track{background:transparent;}
+html::-webkit-scrollbar-thumb,#mpanel::-webkit-scrollbar-thumb{background:transparent;border:3px solid transparent;border-radius:10px;background-clip:padding-box;transition:background .25s;}
+html.scrolling::-webkit-scrollbar-thumb,#mpanel.scrolling::-webkit-scrollbar-thumb{background:rgba(43,33,64,.28);border:3px solid transparent;background-clip:padding-box;}
+html.scrolling::-webkit-scrollbar-thumb:hover,#mpanel.scrolling::-webkit-scrollbar-thumb:hover{background:rgba(43,33,64,.42);border:3px solid transparent;background-clip:padding-box;}
+html,#mpanel{scrollbar-width:thin;scrollbar-color:rgba(43,33,64,0) transparent;}
+html.scrolling,#mpanel.scrolling{scrollbar-color:rgba(43,33,64,.28) transparent;}
+}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh;}
-header{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f6edfd);padding:13px 14px 9px;border-bottom:1px solid var(--border);box-shadow:0 4px 14px rgba(175,141,206,.10);}
+header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#ffffff,#f6edfd);padding:13px 14px 9px;border-bottom:1px solid var(--border);box-shadow:0 4px 14px rgba(175,141,206,.10);}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 9px;padding-right:43px;min-height:34px;}
 #hlogo,#htitle{cursor:pointer;}
 .title img{width:24px;height:24px;object-fit:contain;}
@@ -20,15 +31,18 @@ header{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f6edfd);
 .viewtoggle{display:flex;gap:5px;flex:0 0 auto;}
 .viewtoggle button{border-radius:8px;padding:6px 9px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--card2);color:var(--txt);cursor:pointer;white-space:nowrap;}
 .viewtoggle button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-#menubtn{position:fixed;top:13px;right:calc(max(0px,(100vw - 520px)/2) + 14px);z-index:33;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:transform .35s cubic-bezier(.4,0,.2,1);}
-#menubtn span{display:block;width:20px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;}
-#menubtn.open{transform:rotate(180deg);}
+#menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;justify-content:flex-end;pointer-events:none;}
+#menubtn{position:relative;margin-top:13px;margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0;}
+#menubtn span{display:block;width:19px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;}
 #menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
 #menubtn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
 #menubtn.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
 .searchwrap{position:relative;margin:0 0 9px;}
-.search{width:100%;padding:9px 100px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;}
-.qclear{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:4px 12px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--txt);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.search{width:100%;padding:9px 38px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;outline:none;}
+.search:focus{border-color:var(--accent);}
+.qclear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.qclear svg{width:15px;height:15px;}
+.qclear svg path{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;}
 .search::placeholder{color:#ab9cc9;}
 .suggest{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid var(--border);border-radius:11px;box-shadow:0 8px 24px rgba(43,33,64,.15);max-height:108px;overflow-y:auto;z-index:25;display:none;}
 .suggest.open{display:block;}
@@ -71,8 +85,9 @@ header{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f6edfd);
 .req img{width:15px;height:15px;object-fit:contain;}
 #menuOverlay{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:30;}
 #menuOverlay.open{display:block;}
-#mpanel{position:absolute;top:0;right:calc(max(0px,(100vw - 520px)/2));width:min(320px,88vw);height:100%;background:#ffffff;padding:18px 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);}
-.mtitle{display:flex;align-items:center;gap:8px;margin:0 0 6px 0;}
+#mpanelWrap{position:fixed;inset:0;max-width:520px;margin:0 auto;display:flex;justify-content:flex-end;pointer-events:none;}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);pointer-events:auto;}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:18px 0 6px;background:#ffffff;z-index:1;}
 .mtitle img{width:22px;height:22px;object-fit:contain;}
 .mtitle span{font-size:15px;font-weight:800;}
 .mgrouptitle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:800;color:var(--txt);margin:16px 0 2px;}
@@ -115,14 +130,15 @@ body.affLock .card .heart{cursor:not-allowed;}
   <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1><div class="viewtoggle"><button id="vtGrid" type="button">포켓몬</button><button id="vtRecipe" type="button">음식 레시피</button></div></div>
   <div class="searchwrap">
     <input id="q" class="search" type="text" placeholder="포켓몬 이름 검색" autocomplete="off">
-    <button id="qclear" class="qclear" type="button">모두 지우기</button>
+    <button id="qclear" class="qclear" type="button" aria-label="검색어 지우기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
     <div id="suggestBox" class="suggest"></div>
   </div>
 </header>
 <div class="grid" id="main"></div>
 </div>
-<button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button>
+<div id="menubtnWrap"><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
 <div id="menuOverlay">
+  <div id="mpanelWrap">
   <div id="mpanel">
     <div class="mtitle"><img referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><span>Pokémon Pokopia</span></div>
     <div class="mgrouptitle">포켓몬</div>
@@ -139,6 +155,7 @@ body.affLock .card .heart{cursor:not-allowed;}
       <a class="mbig" href="https://iruroda.github.io/pokelab/" target="_blank" rel="noopener">Pokélab 메인으로</a>
       <button class="mbig" id="loginBtn" type="button">로그인</button>
     </div>
+  </div>
   </div>
 </div>
 <div id="loginModal" class="modal">
@@ -331,10 +348,11 @@ document.getElementById('vtRecipe').onclick=()=>{view='recipe';buildMenu();rende
 document.getElementById('hlogo').onclick=goHome;document.getElementById('htitle').onclick=goHome;
 document.getElementById('qclear').onclick=()=>{q='';document.getElementById('q').value='';renderMain();hideSuggest();};
 
-function openMenu(){document.getElementById('menubtn').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.body.style.overflow='hidden';}
-function closeMenu(){document.getElementById('menubtn').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.body.style.overflow='';}
+function openMenu(){document.getElementById('menubtn').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menubtn').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.documentElement.style.overflow='';document.body.style.overflow='';}
 document.getElementById('menubtn').onclick=()=>{if(document.getElementById('menuOverlay').classList.contains('open'))closeMenu();else openMenu();};
 document.getElementById('menuOverlay').addEventListener('click',e=>{if(e.target.id==='menuOverlay')closeMenu();});
+document.addEventListener('contextmenu',e=>e.preventDefault());
 document.querySelectorAll('.msec h3').forEach(h=>{h.onclick=()=>{h.parentElement.classList.toggle('collapsed');};});
 const affLockBtn=document.getElementById('affLockBtn');
 if(affLockBtn){affLockBtn.onclick=e=>{e.stopPropagation();affinityLocked=!affinityLocked;localStorage.setItem('pokopiaAffLock',affinityLocked?'1':'0');updateAffLockUI();};updateAffLockUI();}
@@ -462,6 +480,9 @@ if(fbAuth){
 
 updateAuthUI();
 buildMenu();renderMain();
+function hookScroll(target,classEl){let t;target.addEventListener('scroll',()=>{classEl.classList.add('scrolling');clearTimeout(t);t=setTimeout(()=>classEl.classList.remove('scrolling'),650);},{passive:true});}
+hookScroll(window,document.documentElement);
+hookScroll(document.getElementById('mpanel'),document.getElementById('mpanel'));
 </script>
 </body>
 </html>
