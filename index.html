@@ -12,16 +12,20 @@
 html{overflow-y:scroll;overflow-x:hidden;}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh;}
-header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#ffffff,#f6edfd);padding:13px 14px 9px;border-bottom:1px solid var(--border);box-shadow:0 4px 14px rgba(175,141,206,.10);}
-.title{display:flex;align-items:center;gap:9px;margin:0 0 9px;}
+header{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f6edfd);padding:13px 14px 9px;border-bottom:1px solid var(--border);box-shadow:0 4px 14px rgba(175,141,206,.10);}
+.title{display:flex;align-items:center;gap:9px;margin:0 0 9px;padding-right:43px;min-height:34px;}
 #hlogo,#htitle{cursor:pointer;}
 .title img{width:24px;height:24px;object-fit:contain;}
 .title h1{font-size:16px;font-weight:800;margin:0;letter-spacing:-.3px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .viewtoggle{display:flex;gap:5px;flex:0 0 auto;}
 .viewtoggle button{border-radius:8px;padding:6px 9px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--card2);color:var(--txt);cursor:pointer;white-space:nowrap;}
 .viewtoggle button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
-#menubtn{flex:0 0 auto;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;}
-#menubtn span{display:block;width:20px;height:3px;border-radius:2px;background:var(--accent);}
+#menubtn{position:fixed;top:13px;right:calc(max(0px,(100vw - 520px)/2) + 14px);z-index:33;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+#menubtn span{display:block;width:20px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;}
+#menubtn.open{transform:rotate(180deg);}
+#menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
+#menubtn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+#menubtn.open span:nth-child(3){transform:translateY(-8px) rotate(-45deg);}
 .searchwrap{position:relative;margin:0 0 9px;}
 .search{width:100%;padding:9px 100px 9px 12px;border-radius:11px;border:1px solid var(--border);background:#ffffff;color:var(--txt);font-size:13px;}
 .qclear{position:absolute;right:5px;top:50%;transform:translateY(-50%);padding:4px 12px;border-radius:9px;border:1px solid var(--border);background:var(--card2);color:var(--txt);font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;}
@@ -67,9 +71,8 @@ header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#fffff
 .req img{width:15px;height:15px;object-fit:contain;}
 #menuOverlay{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:30;}
 #menuOverlay.open{display:block;}
-#mpanel{position:absolute;top:0;right:0;width:min(320px,88vw);height:100%;background:#ffffff;padding:18px 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);}
-#mclose{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--sub);font-size:20px;line-height:1;cursor:pointer;padding:4px;}
-.mtitle{display:flex;align-items:center;gap:8px;margin:0 28px 6px 0;}
+#mpanel{position:absolute;top:0;right:calc(max(0px,(100vw - 520px)/2));width:min(320px,88vw);height:100%;background:#ffffff;padding:18px 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0 0 6px 0;}
 .mtitle img{width:22px;height:22px;object-fit:contain;}
 .mtitle span{font-size:15px;font-weight:800;}
 .mgrouptitle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:800;color:var(--txt);margin:16px 0 2px;}
@@ -109,7 +112,7 @@ body.affLock .card .heart{cursor:not-allowed;}
 <body>
 <div class="wrap">
 <header>
-  <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1><div class="viewtoggle"><button id="vtGrid" type="button">포켓몬</button><button id="vtRecipe" type="button">음식 레시피</button></div><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
+  <div class="title"><img id="hlogo" referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><h1 id="htitle">Pokémon Pokopia</h1><div class="viewtoggle"><button id="vtGrid" type="button">포켓몬</button><button id="vtRecipe" type="button">음식 레시피</button></div></div>
   <div class="searchwrap">
     <input id="q" class="search" type="text" placeholder="포켓몬 이름 검색" autocomplete="off">
     <button id="qclear" class="qclear" type="button">모두 지우기</button>
@@ -118,9 +121,9 @@ body.affLock .card .heart{cursor:not-allowed;}
 </header>
 <div class="grid" id="main"></div>
 </div>
+<button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button>
 <div id="menuOverlay">
   <div id="mpanel">
-    <button id="mclose" type="button" aria-label="닫기">✕</button>
     <div class="mtitle"><img referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><span>Pokémon Pokopia</span></div>
     <div class="mgrouptitle">포켓몬</div>
     <div class="msec" data-key="dexcat"><h3>포켓몬 도감<span class="car">▾</span></h3><div class="chips" id="chips-dexcat"></div></div>
@@ -328,10 +331,9 @@ document.getElementById('vtRecipe').onclick=()=>{view='recipe';buildMenu();rende
 document.getElementById('hlogo').onclick=goHome;document.getElementById('htitle').onclick=goHome;
 document.getElementById('qclear').onclick=()=>{q='';document.getElementById('q').value='';renderMain();hideSuggest();};
 
-function openMenu(){document.getElementById('menuOverlay').classList.add('open');document.body.style.overflow='hidden';}
-function closeMenu(){document.getElementById('menuOverlay').classList.remove('open');document.body.style.overflow='';}
-document.getElementById('menubtn').onclick=openMenu;
-document.getElementById('mclose').onclick=closeMenu;
+function openMenu(){document.getElementById('menubtn').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.body.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menubtn').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.body.style.overflow='';}
+document.getElementById('menubtn').onclick=()=>{if(document.getElementById('menuOverlay').classList.contains('open'))closeMenu();else openMenu();};
 document.getElementById('menuOverlay').addEventListener('click',e=>{if(e.target.id==='menuOverlay')closeMenu();});
 document.querySelectorAll('.msec h3').forEach(h=>{h.onclick=()=>{h.parentElement.classList.toggle('collapsed');};});
 const affLockBtn=document.getElementById('affLockBtn');
