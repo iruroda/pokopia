@@ -83,10 +83,11 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .plus{color:var(--sub);font-weight:800;}
 .req{display:inline-flex;align-items:center;gap:3px;background:var(--accent);border:none;border-radius:7px;padding:2px 8px 2px 5px;font-size:11.5px;color:#ffffff;font-weight:700;}
 .req img{width:15px;height:15px;object-fit:contain;}
-#menuOverlay{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:30;}
-#menuOverlay.open{display:block;}
-#mpanelWrap{position:fixed;inset:0;max-width:520px;margin:0 auto;display:flex;justify-content:flex-end;pointer-events:none;}
-#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);pointer-events:auto;}
+#menuOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(43,33,64,.45);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s ease;}
+#menuOverlay.open{opacity:1;pointer-events:auto;}
+#mpanelWrap{position:fixed;top:0;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:31;display:flex;justify-content:flex-end;pointer-events:none;}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease;}
+#mpanel.open{opacity:1;transform:scale(1);pointer-events:auto;}
 .mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:18px 0 6px;background:#ffffff;z-index:1;}
 .mtitle img{width:22px;height:22px;object-fit:contain;}
 .mtitle span{font-size:15px;font-weight:800;}
@@ -137,8 +138,8 @@ body.affLock .card .heart{cursor:not-allowed;}
 <div class="grid" id="main"></div>
 </div>
 <div id="menubtnWrap"><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
-<div id="menuOverlay">
-  <div id="mpanelWrap">
+<div id="menuOverlay"></div>
+<div id="mpanelWrap">
   <div id="mpanel">
     <div class="mtitle"><img referrerpolicy="no-referrer" src="img/monsterball.png" alt="ball"><span>Pokémon Pokopia</span></div>
     <div class="mgrouptitle">포켓몬</div>
@@ -155,7 +156,6 @@ body.affLock .card .heart{cursor:not-allowed;}
       <a class="mbig" href="https://iruroda.github.io/pokelab/" target="_blank" rel="noopener">Pokélab 메인으로</a>
       <button class="mbig" id="loginBtn" type="button">로그인</button>
     </div>
-  </div>
   </div>
 </div>
 <div id="loginModal" class="modal">
@@ -348,8 +348,8 @@ document.getElementById('vtRecipe').onclick=()=>{view='recipe';buildMenu();rende
 document.getElementById('hlogo').onclick=goHome;document.getElementById('htitle').onclick=goHome;
 document.getElementById('qclear').onclick=()=>{q='';document.getElementById('q').value='';renderMain();hideSuggest();};
 
-function openMenu(){document.getElementById('menubtn').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.documentElement.style.overflow='hidden';document.body.style.overflow='hidden';}
-function closeMenu(){document.getElementById('menubtn').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.documentElement.style.overflow='';document.body.style.overflow='';}
+function openMenu(){document.getElementById('menubtn').classList.add('open');document.getElementById('menuOverlay').classList.add('open');document.getElementById('mpanel').classList.add('open');document.documentElement.style.overflow='hidden';}
+function closeMenu(){document.getElementById('menubtn').classList.remove('open');document.getElementById('menuOverlay').classList.remove('open');document.getElementById('mpanel').classList.remove('open');document.documentElement.style.overflow='';}
 document.getElementById('menubtn').onclick=()=>{if(document.getElementById('menuOverlay').classList.contains('open'))closeMenu();else openMenu();};
 document.getElementById('menuOverlay').addEventListener('click',e=>{if(e.target.id==='menuOverlay')closeMenu();});
 document.addEventListener('contextmenu',e=>e.preventDefault());
