@@ -480,10 +480,16 @@ if(fbAuth){
   fbAuth.onAuthStateChanged(function(user){
     if(user){
       CUR_USER=emailToId(user.email);
+      const localBackup=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
       db.collection('pokopiaLikes').doc(user.uid).get().then(function(doc){
-        LIKED=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
+        const remote=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
+        localBackup.forEach(x=>remote.add(x));
+        LIKED=remote;
+        saveLikesLocal();
+        db.collection('pokopiaLikes').doc(user.uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+          .catch(function(e){console.error('하트 저장 실패(Firestore 규칙 확인 필요)',e);});
         updateAuthUI();renderMain();
-      }).catch(function(e){console.error('하트 불러오기 실패',e);updateAuthUI();renderMain();});
+      }).catch(function(e){console.error('하트 불러오기 실패(Firestore 규칙 확인 필요)',e);LIKED=localBackup;updateAuthUI();renderMain();});
     }else{
       CUR_USER=null;
       LIKED=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
