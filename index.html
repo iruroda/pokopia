@@ -58,13 +58,20 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px;user-select:none;}
 .card{position:relative;aspect-ratio:1/1;background:var(--card);border-radius:13px;padding:5px 3px 4px;overflow:hidden;border:1px solid var(--border);}
 .card .no{position:absolute;top:3px;left:5px;font-size:8.5px;color:var(--sub);font-weight:700;user-select:none;z-index:2;}
-.card .heart{position:absolute;top:24px;left:3px;width:17px;height:17px;z-index:3;cursor:pointer;}
+.card .region{position:absolute;top:15px;left:3px;width:16px;height:16px;z-index:3;cursor:pointer;}
+.card .region img{width:100%;height:100%;object-fit:contain;display:block;}
+.card .heart{position:absolute;top:33px;left:3px;width:17px;height:17px;z-index:3;cursor:pointer;}
 .card .heart svg{width:100%;height:100%;display:block;}
 .card .heart path{fill:none;stroke:var(--heart-empty);stroke-width:1.3;}
 .card .heart.liked path{fill:var(--heart);stroke:var(--heart);}
 .card .badges{position:absolute;top:3px;right:3px;display:flex;flex-direction:column;align-items:center;gap:1px;z-index:2;}
 .card .badges img{width:17px;height:17px;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));}
 .card .badges .sep{width:16px;height:1px;background:var(--border);margin:4px 0;flex:0 0 auto;}
+.regionPicker{position:fixed;display:none;grid-template-columns:repeat(2,1fr);gap:4px;background:#ffffff;border:1px solid var(--border);border-radius:10px;padding:6px;box-shadow:0 8px 24px rgba(43,33,64,.2);z-index:34;}
+.regionPicker.open{display:grid;}
+.regionPicker button{width:30px;height:30px;padding:0;border:1.5px solid transparent;border-radius:8px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.regionPicker button.sel{border-color:var(--accent);}
+.regionPicker button img{width:20px;height:20px;object-fit:contain;display:block;}
 .card img.sp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:74%;height:54%;object-fit:contain;}
 .card .nm{position:absolute;left:0;right:0;bottom:10px;font-size:10px;font-weight:700;line-height:1.15;text-align:center;word-break:keep-all;padding:0 3px;}
 .empty{text-align:center;color:var(--sub);padding:50px 20px;font-size:13px;}
@@ -112,19 +119,6 @@ body.affLock .card .heart{cursor:not-allowed;}
 .mgreet.show{display:block;}
 .mfooter{padding-top:6px;display:flex;gap:8px;}
 .mbig{flex:1;text-align:center;background:var(--bg);border:1px solid var(--border);color:var(--txt);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;}
-.modal{display:none;position:fixed;inset:0;background:rgba(43,33,64,.45);z-index:40;align-items:center;justify-content:center;padding:24px;}
-.modal.open{display:flex;}
-.modal .box{background:#ffffff;border-radius:16px;padding:26px 22px;width:100%;max-width:300px;text-align:center;box-shadow:0 10px 40px rgba(43,33,64,.25);position:relative;}
-.modal .modalClose{position:absolute;top:10px;right:10px;width:26px;height:26px;padding:0;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.modal .modalClose svg{width:15px;height:15px;}
-.modal .modalClose svg path{stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;}
-.modal h2{font-size:16px;margin:0 0 14px;font-weight:800;color:var(--txt);}
-.modal input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;color:var(--txt);font-size:14px;padding:10px 12px;margin-bottom:9px;outline:none;font-family:inherit;}
-.modal input:focus{border-color:var(--accent);}
-.modeswitch{font-size:11.5px;color:var(--sub);margin-top:10px;}
-.modeswitch a{color:var(--accent);font-weight:700;text-decoration:none;cursor:pointer;}
-.modal button.primary{margin-top:4px;width:100%;background:var(--accent);border:none;border-radius:10px;padding:11px;font-size:14px;font-weight:700;color:#ffffff;cursor:pointer;}
-.modal button.primary span{display:inline-block;color:#ffffff;transition:opacity .18s ease;}
 </style>
 </head>
 <body>
@@ -139,6 +133,7 @@ body.affLock .card .heart{cursor:not-allowed;}
 <div class="grid" id="main"></div>
 <div class="sitefooter">본 사이트는 팬이 만든 비공식 사이트로, 닌텐도, 게임프리크, 주식회사 포켓몬과는 어떠한 관계도 없습니다. Pokemon은 닌텐도 / Creatures Inc. / Game Freak Inc.의 상표입니다. 모든 게임 콘텐츠, 이미지, 상표는 각 권리자에게 귀속됩니다.</div>
 </div>
+<div id="regionPicker" class="regionPicker"></div>
 <div id="menubtnWrap"><button id="menubtn" type="button" aria-label="메뉴"><span></span><span></span><span></span></button></div>
 <div id="menuOverlay"></div>
 <div id="mpanelWrap">
@@ -146,6 +141,7 @@ body.affLock .card .heart{cursor:not-allowed;}
     <div class="mtitle"><img referrerpolicy="no-referrer" src="img/ditto.png" alt="ball"><span>Pokémon Pokopia</span></div>
     <div class="mgrouptitle">포켓몬</div>
     <div class="msec" data-key="dexcat"><h3>포켓몬 도감<span class="car">▾</span></h3><div class="chips" id="chips-dexcat"></div></div>
+    <div class="msec" data-key="region"><h3>지역<span class="car">▾</span></h3><div class="chips" id="chips-region"></div></div>
     <div class="msec" data-key="type"><h3>타입<span class="car">▾</span></h3><div class="chips" id="chips-type"></div></div>
     <div class="msec" data-key="spec"><h3>특기<span class="car">▾</span></h3><div class="chips" id="chips-spec"></div></div>
     <div class="msec" data-key="flavor"><h3>좋아하는 맛<span class="car">▾</span></h3><div class="chips" id="chips-flavor"></div></div>
@@ -158,15 +154,6 @@ body.affLock .card .heart{cursor:not-allowed;}
       <a class="mbig" href="https://iruroda.github.io/pokelab/" target="_blank" rel="noopener">Pokélab 메인으로</a>
       <button class="mbig" id="loginBtn" type="button">로그인</button>
     </div>
-  </div>
-</div>
-<div id="loginModal" class="modal">
-  <div class="box">
-    <button class="modalClose" id="loginCancel" type="button" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M6 6L18 18M18 6L6 18"/></svg></button>
-    <h2 id="loginTitle">로그인</h2>
-    <input id="loginId" type="text" placeholder="아이디" autocomplete="username">
-    <input id="loginPw" type="password" placeholder="비밀번호" autocomplete="current-password">
-    <button class="primary" id="loginSubmit" type="button"><span id="loginBtnTxt">확인</span></button>
   </div>
 </div>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -186,7 +173,10 @@ function dexCat(p){const no=String(p.no);if(/^E/.test(no))return '이벤트';if(
 const RFLAVORS=['맛 없음','매운맛','떫은맛','단맛','쓴맛','신맛'];
 const SPEC_ORDER=['점화','재배','급수','절삭','건축','땅고르기','탐색','공중날기','순간이동','리사이클','분류','발전','분쇄','어지르기','거래','분위기 메이킹','연마','하품','꿈섬','꿀 모으기','수납','폭발','컬렉터','레어 변환','변신','감정','발광','페인팅','먹보','파티','DJ','장인','불명'];
 const rflavorVal=label=>label==='맛 없음'?'없음':label;
-let selType=new Set(), selSpec=new Set(), selFlavor=new Set();
+const REGION_ORDER=['바싹바싹 황야 마을','우중충한 해안 마을','울퉁불퉁 산지 마을','반짝반짝 부유섬 마을','백지 마을','보글보글 해저 마을'];
+const REGION_ICON={'바싹바싹 황야 마을':'img/region_witheredwasteland.png','우중충한 해안 마을':'img/region_bleakbeach.png','울퉁불퉁 산지 마을':'img/region_rockyridges.png','반짝반짝 부유섬 마을':'img/region_sparklingskylands.png','백지 마을':'img/region_palettetown.png','보글보글 해저 마을':'img/region_bubblybasin.png'};
+const DEFAULT_REGION='백지 마을';
+let selType=new Set(), selSpec=new Set(), selFlavor=new Set(), selRegion=new Set();
 const uniq=a=>[...new Set(a)];
 const HEART_PATH='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
 function heartChipIcon(filled){
@@ -209,10 +199,12 @@ function valuesFor(c){
   if(c==='type')return Object.keys(TYPE_EN).filter(t=>DATA.some(p=>p.types.includes(t)));
   if(c==='flavor')return FLAVOR_ORDER.filter(f=>DATA.some(p=>p.flavor===f));
   if(c==='spec')return SPEC_ORDER;
+  if(c==='region')return REGION_ORDER;
   return [];
 }
-function iconFor(c,v){return c==='type'?TICON(v):c==='flavor'?(v==='불명'?null:FLAVOR_ICON[v]):c==='spec'?SICON(v):null;}
-function selSetFor(ck){return ck==='type'?selType:ck==='spec'?selSpec:selFlavor;}
+function iconFor(c,v){return c==='type'?TICON(v):c==='flavor'?(v==='불명'?null:FLAVOR_ICON[v]):c==='spec'?SICON(v):c==='region'?REGION_ICON[v]:null;}
+function selSetFor(ck){return ck==='type'?selType:ck==='spec'?selSpec:ck==='region'?selRegion:selFlavor;}
+function regionOf(p){return REGIONS[String(p.no)]||DEFAULT_REGION;}
 function pmatch(p){
   if(q&&!p.name.includes(q))return false;
   if(selDex&&dexCat(p)!==selDex)return false;
@@ -221,6 +213,7 @@ function pmatch(p){
   if(selFlavor.size&&!selFlavor.has(p.flavor))return false;
   if(selAffinity==='높음'&&!LIKED.has(String(p.no)))return false;
   if(selAffinity==='낮음'&&LIKED.has(String(p.no)))return false;
+  if(selRegion.size&&!selRegion.has(regionOf(p)))return false;
   return true;
 }
 function chipBtn(label,state,icon,bgColor,onClick){
@@ -248,7 +241,7 @@ function buildMenu(){
       view='grid';buildMenu();renderMain();window.scrollTo({top:0,behavior:'smooth'});
     }));
   });
-  ['type','spec','flavor'].forEach(ck=>{
+  ['region','type','spec','flavor'].forEach(ck=>{
     const box=document.getElementById('chips-'+ck);box.innerHTML='';
     const sel=selSetFor(ck);
     box.appendChild(chipBtn('전부',sel.size===0?(view==='grid'?'view':'other'):null,null,null,()=>{
@@ -303,6 +296,7 @@ function updateViewToggle(){
 }
 function renderMain(){
   updateViewToggle();
+  closeRegionPicker();
   const g=document.getElementById('main');
   if(view==='recipe'){
     const list=RECIPES.filter(r=>(!rcat||catOf(r)===rcat)&&(!rflavor||r.flavor===rflavor)&&(!q||r.name.includes(q)||r.ings.some(i=>i.includes(q))));
@@ -318,7 +312,8 @@ function renderMain(){
     const sic=p.specs.map(s=>SICON(s)?`<img referrerpolicy="no-referrer" src="${SICON(s)}" title="${s}">`:'').join('');
     const fic=(p.name!=='메타몽'&&FLAVOR_ICON[p.flavor])?`<img referrerpolicy="no-referrer" src="${FLAVOR_ICON[p.flavor]}" title="${p.flavor}">`:'';
     const liked=LIKED.has(String(p.no))?' liked':'';
-    return `<div class="card"><span class="no">${/^E/.test(String(p.no))?p.no:String(p.no).padStart(3,'0')}</span><span class="heart${liked}" data-no="${p.no}"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span class="badges">${[tic,sic,fic].filter(Boolean).join('<span class="sep"></span>')}</span><img class="sp" loading="lazy" referrerpolicy="no-referrer" data-dex="${p.dex}"${alt} src="${src}" alt="${p.name}" onerror="imgFail(this)"><span class="nm">${p.name}</span></div>`;
+    const reg=regionOf(p);
+    return `<div class="card"><span class="no">${/^E/.test(String(p.no))?p.no:String(p.no).padStart(3,'0')}</span><span class="region" data-no="${p.no}"><img referrerpolicy="no-referrer" src="${REGION_ICON[reg]}" alt="${reg}" title="${reg}"></span><span class="heart${liked}" data-no="${p.no}"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span><span class="badges">${[tic,sic,fic].filter(Boolean).join('<span class="sep"></span>')}</span><img class="sp" loading="lazy" referrerpolicy="no-referrer" data-dex="${p.dex}"${alt} src="${src}" alt="${p.name}" onerror="imgFail(this)"><span class="nm">${p.name}</span></div>`;
   }).join(''):'<div class="empty">검색 결과가 없습니다.</div>';
 }
 document.getElementById('q').addEventListener('input',e=>{q=e.target.value.trim();renderMain();});
@@ -346,33 +341,25 @@ try{
   db=firebase.firestore();
 }catch(e){console.error('Firebase 초기화 실패',e);}
 
-// 아이디 <-> 가짜 이메일 변환 (todayspokemon의 idToEmail과 완전히 동일한 규칙)
-function idToEmail(id){
-  var hex="",bytes=unescape(encodeURIComponent(id));
-  for(var i=0;i<bytes.length;i++){var h=bytes.charCodeAt(i).toString(16);hex+=(h.length<2?"0":"")+h;}
-  return "u"+hex+"@todayspokemon.app";
-}
-function emailToId(email){
-  try{
-    var hex=email.slice(1,email.indexOf('@'));
-    var bytes="";
-    for(var i=0;i<hex.length;i+=2){bytes+=String.fromCharCode(parseInt(hex.substr(i,2),16));}
-    return decodeURIComponent(escape(bytes));
-  }catch(e){return email;}
-}
-
-let CUR_USER=null;
+let CUR_USER=null, CUR_NAME=null;
 function likeKey(){return 'pokopia_likes_'+(CUR_USER||'guest');}
+function regionStoreKey(){return 'pokopia_regions_'+(CUR_USER||'guest');}
 let LIKED=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+let REGIONS=JSON.parse(localStorage.getItem(regionStoreKey())||'{}');
 function saveLikesLocal(){localStorage.setItem(likeKey(),JSON.stringify([...LIKED]));}
-function saveLikesRemote(uid){
+function saveRegionsLocal(){localStorage.setItem(regionStoreKey(),JSON.stringify(REGIONS));}
+function saveUserDataRemote(uid){
   if(!db||!uid)return;
-  db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
-    .catch(function(e){console.error('하트 저장 실패(Firestore 규칙 확인 필요)',e);});
+  db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],regions:REGIONS,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+    .catch(function(e){console.error('저장 실패(Firestore 규칙 확인 필요)',e);});
 }
 function saveLikes(){
   saveLikesLocal();
-  if(fbAuth&&fbAuth.currentUser)saveLikesRemote(fbAuth.currentUser.uid);
+  if(fbAuth&&fbAuth.currentUser)saveUserDataRemote(fbAuth.currentUser.uid);
+}
+function saveRegions(){
+  saveRegionsLocal();
+  if(fbAuth&&fbAuth.currentUser)saveUserDataRemote(fbAuth.currentUser.uid);
 }
 document.getElementById('main').addEventListener('click',e=>{
   const h=e.target.closest('.heart');
@@ -384,94 +371,116 @@ document.getElementById('main').addEventListener('click',e=>{
   saveLikes();
   if(selAffinity)renderMain();
 });
+function closeRegionPicker(){
+  const rp=document.getElementById('regionPicker');
+  if(!rp)return;
+  rp.classList.remove('open');
+  rp.dataset.forNo='';
+}
+function openRegionPicker(no,anchorEl){
+  const rp=document.getElementById('regionPicker');
+  if(!rp)return;
+  if(rp.dataset.forNo===no){closeRegionPicker();return;}
+  const cur=REGIONS[no]||DEFAULT_REGION;
+  rp.innerHTML='';
+  REGION_ORDER.forEach(rv=>{
+    const b=document.createElement('button');
+    b.type='button';
+    if(rv===cur)b.classList.add('sel');
+    const im=document.createElement('img');im.referrerPolicy='no-referrer';im.src=REGION_ICON[rv];im.alt=rv;im.title=rv;
+    b.appendChild(im);
+    b.onclick=(e)=>{
+      e.stopPropagation();
+      REGIONS[no]=rv;
+      saveRegions();
+      closeRegionPicker();
+      renderMain();
+    };
+    rp.appendChild(b);
+  });
+  rp.dataset.forNo=no;
+  rp.classList.add('open');
+  const card=anchorEl.closest('.card');
+  const cards=[...document.getElementById('main').children];
+  const idx=cards.indexOf(card);
+  const isRightCol=idx%3===2;
+  const rect=anchorEl.getBoundingClientRect();
+  const pw=rp.offsetWidth,ph=rp.offsetHeight;
+  let left=isRightCol?rect.left-pw-6:rect.right+6;
+  left=Math.max(6,Math.min(left,window.innerWidth-pw-6));
+  let top=rect.top;
+  if(top+ph>window.innerHeight-8)top=window.innerHeight-8-ph;
+  if(top<8)top=8;
+  rp.style.left=left+'px';
+  rp.style.top=top+'px';
+}
+document.getElementById('main').addEventListener('click',e=>{
+  const rEl=e.target.closest('.region');
+  if(!rEl)return;
+  e.stopPropagation();
+  openRegionPicker(rEl.dataset.no,rEl);
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#regionPicker')&&!e.target.closest('.region'))closeRegionPicker();
+});
+window.addEventListener('scroll',()=>closeRegionPicker(),{passive:true});
 
 function updateAuthUI(){
   document.getElementById('loginBtn').textContent=CUR_USER?'로그아웃':'로그인';
   const g=document.getElementById('mgreet');
-  if(CUR_USER==='admin'){g.textContent='관리자로 로그인 중입니다.';}
-  else if(CUR_USER){g.textContent=CUR_USER+'님, 안녕하세요.';}
+  if(CUR_USER){g.textContent=CUR_NAME+'님, 안녕하세요.';}
   else{g.textContent='로그인하면 기록을 저장할 수 있습니다.';}
   g.classList.add('show');
 }
-let loginBtnMsgTimer=null;
-function loginBtnFlash(text){
-  const btxt=document.getElementById('loginBtnTxt');
-  clearTimeout(loginBtnMsgTimer);
-  btxt.style.opacity='0';
-  setTimeout(()=>{btxt.textContent=text;btxt.style.opacity='1';},180);
-  loginBtnMsgTimer=setTimeout(()=>{
-    btxt.style.opacity='0';
-    setTimeout(()=>{btxt.textContent='확인';btxt.style.opacity='1';},180);
-  },1800);
+function mergeGuestDataInto(uid){
+  return db.collection('pokopiaLikes').doc(uid).get().then(function(doc){
+    const data=doc.exists?doc.data():{};
+    const remoteLiked=new Set(data.nos||[]);
+    LIKED.forEach(x=>remoteLiked.add(x));
+    LIKED=remoteLiked;
+    REGIONS=Object.assign({},data.regions||{},REGIONS);
+    return db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],regions:REGIONS,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+  });
 }
-function openLogin(){clearTimeout(loginBtnMsgTimer);const btxt=document.getElementById('loginBtnTxt');btxt.textContent='확인';btxt.style.opacity='1';document.getElementById('loginId').value='';document.getElementById('loginPw').value='';document.getElementById('loginModal').classList.add('open');}
-function closeLogin(){document.getElementById('loginModal').classList.remove('open');}
-document.getElementById('loginCancel').onclick=closeLogin;
-document.getElementById('loginModal').addEventListener('click',e=>{if(e.target.id==='loginModal')closeLogin();});
-function loginEnterKey(e){if(e.key==='Enter'){e.preventDefault();document.getElementById('loginSubmit').click();}}
-document.getElementById('loginId').addEventListener('keydown',loginEnterKey);
-document.getElementById('loginPw').addEventListener('keydown',loginEnterKey);
 document.getElementById('loginBtn').onclick=()=>{
   if(CUR_USER){
     if(fbAuth)fbAuth.signOut();
     return;
   }
-  openLogin();
-};
-function mergeGuestLikesInto(uid){
-  return db.collection('pokopiaLikes').doc(uid).get().then(function(doc){
-    const remote=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
-    LIKED.forEach(x=>remote.add(x));
-    LIKED=remote;
-    return db.collection('pokopiaLikes').doc(uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-  });
-}
-document.getElementById('loginSubmit').onclick=()=>{
-  const id=document.getElementById('loginId').value.trim();
-  const pw=document.getElementById('loginPw').value;
-  const btn=document.getElementById('loginSubmit');
-  const btxt=document.getElementById('loginBtnTxt');
-  if(!id||!pw){loginBtnFlash('아이디와 비밀번호를 입력해주세요.');return;}
-  if(!fbAuth){loginBtnFlash('서버 연결이 안 돼 로그인할 수 없습니다.');return;}
-  if(pw.length<6){loginBtnFlash('비밀번호는 6자 이상이어야 합니다.');return;}
-  const email=idToEmail(id);
-  if(email.length>80){loginBtnFlash('아이디가 너무 깁니다.');return;}
-  clearTimeout(loginBtnMsgTimer);btn.disabled=true;btxt.textContent='로그인 중…';btxt.style.opacity='1';
-  fbAuth.signInWithEmailAndPassword(email,pw)
-    .then(function(cred){return mergeGuestLikesInto(cred.user.uid).catch(function(mergeErr){console.error('찜 병합 실패',mergeErr);});})
-    .then(function(){
-      btn.disabled=false;btxt.textContent='확인';btxt.style.opacity='1';
-      closeLogin();closeMenu();
-    })
+  if(!fbAuth)return;
+  const provider=new firebase.auth.GoogleAuthProvider();
+  fbAuth.signInWithPopup(provider)
+    .then(function(result){return mergeGuestDataInto(result.user.uid).catch(function(mergeErr){console.error('찜 병합 실패',mergeErr);});})
+    .then(function(){closeMenu();})
     .catch(function(err){
-      btn.disabled=false;
-      const code=err&&err.code;
-      if(code==='auth/user-not-found'){loginBtnFlash('존재하지 않는 아이디입니다.');}
-      else if(code==='auth/wrong-password'){loginBtnFlash('비밀번호가 일치하지 않아요.');}
-      else if(code==='auth/invalid-email'){loginBtnFlash('아이디 형식이 올바르지 않아요.');}
-      else if(code==='auth/network-request-failed'){loginBtnFlash('네트워크 연결을 확인해주세요.');}
-      else if(code==='auth/too-many-requests'){loginBtnFlash('시도가 너무 많아요. 잠시 후 다시 시도해주세요.');}
-      else{loginBtnFlash('계정 정보가 일치하지 않습니다.');console.error(err);}
+      if(err&&err.code==='auth/popup-closed-by-user')return;
+      console.error('구글 로그인 실패(Firebase 콘솔에서 Google 로그인 방식이 활성화되어 있는지 확인 필요)',err);
     });
 };
 
 if(fbAuth){
   fbAuth.onAuthStateChanged(function(user){
     if(user){
-      CUR_USER=emailToId(user.email);
-      const localBackup=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+      CUR_USER=user.uid;
+      CUR_NAME=user.displayName||user.email||'사용자';
+      const localLikedBackup=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+      const localRegionsBackup=JSON.parse(localStorage.getItem(regionStoreKey())||'{}');
       db.collection('pokopiaLikes').doc(user.uid).get().then(function(doc){
-        const remote=new Set(doc.exists&&doc.data().nos?doc.data().nos:[]);
-        localBackup.forEach(x=>remote.add(x));
-        LIKED=remote;
-        saveLikesLocal();
-        db.collection('pokopiaLikes').doc(user.uid).set({nos:[...LIKED],updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
-          .catch(function(e){console.error('하트 저장 실패(Firestore 규칙 확인 필요)',e);});
+        const data=doc.exists?doc.data():{};
+        const remoteLiked=new Set(data.nos||[]);
+        localLikedBackup.forEach(x=>remoteLiked.add(x));
+        LIKED=remoteLiked;
+        REGIONS=Object.assign({},data.regions||{},localRegionsBackup);
+        saveLikesLocal();saveRegionsLocal();
+        db.collection('pokopiaLikes').doc(user.uid).set({nos:[...LIKED],regions:REGIONS,updatedAt:firebase.firestore.FieldValue.serverTimestamp()})
+          .catch(function(e){console.error('저장 실패(Firestore 규칙 확인 필요)',e);});
         updateAuthUI();renderMain();
-      }).catch(function(e){console.error('하트 불러오기 실패(Firestore 규칙 확인 필요)',e);LIKED=localBackup;updateAuthUI();renderMain();});
+      }).catch(function(e){console.error('불러오기 실패(Firestore 규칙 확인 필요)',e);LIKED=localLikedBackup;REGIONS=localRegionsBackup;updateAuthUI();renderMain();});
     }else{
       CUR_USER=null;
+      CUR_NAME=null;
       LIKED=new Set(JSON.parse(localStorage.getItem(likeKey())||'[]'));
+      REGIONS=JSON.parse(localStorage.getItem(regionStoreKey())||'{}');
       updateAuthUI();renderMain();
     }
   });
