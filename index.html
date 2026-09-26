@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Pokémon Pokopia</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 
@@ -10,9 +10,9 @@
 :root{--bg:#f3e8fd;--card:#ffffff;--txt:#1a1a1a;--sub-rgb:143,122,168;--sub:#8f7aa8;--accent:#af8dce;--border:rgba(var(--sub-rgb),.35);--heart:#ffb0c8;--heart-empty:rgba(var(--sub-rgb),.55);}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 img{-webkit-user-drag:none;user-drag:none;-webkit-touch-callout:none;}
-html{overflow-y:scroll;overflow-x:hidden;scrollbar-gutter:stable both-edges;}
+html{overflow-y:scroll;overflow-x:hidden;scrollbar-gutter:stable;}
 @media (hover:hover) and (pointer:fine){
-#mpanel{scrollbar-gutter:stable both-edges;}
+#mpanel{scrollbar-gutter:stable;}
 html::-webkit-scrollbar,#mpanel::-webkit-scrollbar{width:12px;height:12px;}
 html::-webkit-scrollbar-track,#mpanel::-webkit-scrollbar-track{background:transparent;}
 html::-webkit-scrollbar-thumb,#mpanel::-webkit-scrollbar-thumb{background:transparent;border:3px solid transparent;border-radius:10px;background-clip:padding-box;transition:background .25s;}
@@ -33,7 +33,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .viewtoggle button{border-radius:8px;padding:6px 9px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--bg);color:var(--txt);cursor:pointer;white-space:nowrap;}
 .viewtoggle button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 #menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;justify-content:flex-end;pointer-events:none;}
-#menubtn{position:relative;margin-top:calc(12px + env(safe-area-inset-top));margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0;}
+#menubtn{position:relative;margin-top:12px;margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0;}
 #menubtn span{display:block;width:19px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;}
 #menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
 #menubtn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
@@ -54,8 +54,8 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .chip.active-view{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:none;}
 .chip .chipsvg{width:16px;height:16px;display:flex;flex:0 0 auto;}
 .chip .chipsvg svg{width:100%;height:100%;display:block;}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px 14px 12px;}
-.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:6px 22px 20px;user-select:none;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px;}
+.sitefooter{font-size:7.5px;color:var(--accent);text-align:center;line-height:1.5;padding:12px;user-select:none;}
 .card{position:relative;height:114px;background:var(--card);border-radius:8px;padding:5px 3px 4px;overflow:hidden;border:1px solid var(--border);}
 .card .no{position:absolute;top:4px;left:4px;font-size:8.5px;color:var(--sub);font-weight:700;user-select:none;z-index:2;}
 .card .region{position:absolute;top:18px;left:4px;width:16px;height:16px;z-index:3;cursor:pointer;}
@@ -94,13 +94,13 @@ body.affLock .card .heart,body.regLock .card .region{cursor:inherit;}
 #menuOverlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(43,33,64,.45);z-index:30;opacity:0;pointer-events:none;transition:opacity .18s ease;}
 #menuOverlay.open{opacity:1;pointer-events:auto;}
 #mpanelWrap{position:fixed;top:0;left:0;right:0;bottom:0;max-width:520px;margin:0 auto;z-index:31;display:flex;justify-content:flex-end;pointer-events:none;}
-#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 16px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease;}
+#mpanel{position:relative;width:min(320px,88vw);height:100%;background:#ffffff;padding:0 12px 20px;overflow-y:auto;display:flex;flex-direction:column;overscroll-behavior:contain;box-shadow:-6px 0 24px rgba(43,33,64,.18);opacity:0;transform:scale(.96);transform-origin:top right;pointer-events:none;transition:opacity .15s ease,transform .15s ease;}
 #mpanel.open{opacity:1;transform:scale(1);pointer-events:auto;}
-.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:18px 0 6px;background:#ffffff;z-index:1;}
+.mtitle{display:flex;align-items:center;gap:8px;margin:0;position:sticky;top:0;padding:12px 0 8px;background:#ffffff;z-index:1;}
 .mtitle img{width:22px;height:22px;object-fit:contain;}
 .mtitle span{font-size:15px;font-weight:800;}
-.mgrouptitle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:800;color:var(--txt);margin:18px 0 0;}
-.mgrouptitle.mgap{margin-top:36px;}
+.mgrouptitle{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:800;color:var(--txt);margin:8px 0 0;}
+.mgrouptitle.mgap{margin-top:24px;}
 .mgrouptitle::after{content:'';flex:1;height:1px;background:var(--border);}
 .msec h3{font-size:12px;color:var(--sub);margin:12px 0 8px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;}
 .msec h3 .mtxt{display:flex;align-items:center;gap:6px;}
@@ -115,7 +115,7 @@ body.affLock .card .heart,body.regLock .card .region{cursor:inherit;}
 .msec.collapsed .chips{display:none;}
 #mpanel .chips{padding:0;}
 .mdivider{height:1px;background:var(--border);margin:14px 0 0;flex:0 0 auto;}
-.mgreet{display:none;font-size:12.5px;font-weight:600;color:var(--sub);text-align:left;margin-top:48px;}
+.mgreet{display:none;font-size:12.5px;font-weight:600;color:var(--sub);text-align:left;margin-top:36px;}
 .mgreet.show{display:block;}
 .mfooter{padding-top:8px;display:flex;gap:8px;}
 .mbig#loginBtn,.mbig[href*="/pokelab"]{height:36px;box-sizing:border-box;padding:0 10px;}
