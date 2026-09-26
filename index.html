@@ -24,7 +24,7 @@ html.scrolling,#mpanel.scrolling{scrollbar-color:rgba(43,33,64,.28) transparent;
 html,body{margin:0;padding:0;overscroll-behavior-y:none;-webkit-user-select:none;user-select:none;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans KR","Malgun Gothic",sans-serif;}
 input,textarea{-webkit-user-select:text;user-select:text;}
 .wrap{max-width:520px;margin:0 auto;min-height:100vh;}
-header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#ffffff,var(--bg) 55%);padding:13px 14px 9px;}
+header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#ffffff,var(--bg) 55%);padding:12px 12px 8px;}
 .title{display:flex;align-items:center;gap:9px;margin:0 0 9px;padding-right:43px;min-height:34px;}
 #hlogo,#htitle{cursor:pointer;}
 .title img{width:24px;height:24px;object-fit:contain;}
@@ -33,7 +33,7 @@ header{position:sticky;top:0;z-index:15;background:linear-gradient(180deg,#fffff
 .viewtoggle button{border-radius:8px;padding:6px 9px;font-size:11px;font-weight:700;border:1px solid var(--border);background:var(--bg);color:var(--txt);cursor:pointer;white-space:nowrap;}
 .viewtoggle button.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 #menubtnWrap{position:fixed;top:0;left:0;right:0;max-width:520px;margin:0 auto;z-index:33;display:flex;justify-content:flex-end;pointer-events:none;}
-#menubtn{position:relative;margin-top:13px;margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0;}
+#menubtn{position:relative;margin-top:calc(12px + env(safe-area-inset-top));margin-right:14px;width:34px;height:34px;padding:0;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;pointer-events:auto;flex-shrink:0;}
 #menubtn span{display:block;width:19px;height:3px;border-radius:2px;background:var(--accent);transform-origin:center;transition:transform .3s cubic-bezier(.4,0,.2,1),opacity .2s ease;}
 #menubtn.open span:nth-child(1){transform:translateY(8px) rotate(45deg);}
 #menubtn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
